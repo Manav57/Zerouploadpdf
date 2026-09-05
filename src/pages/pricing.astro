@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import PricingSection from '../components/PricingSection.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+
+const notes = [
+  {
+    icon: 'check',
+    title: 'Start free, stay free',
+    body: 'The free tier is a working product, not a trial. Unlimited native PDFs and 3 OCR conversions a day, forever.',
+  },
+  {
+    icon: 'lock',
+    title: 'Your documents never touch billing',
+    body: 'Payment is handled by Stripe. Your PDFs are never attached to your account, your email, or your payment history.',
+  },
+  {
+    icon: 'refresh',
+    title: 'Cancel anytime',
+    body: 'Monthly or yearly, cancel in two clicks. Downgrade keeps your past conversions; nothing is held hostage.',
+  },
+];
+---
+
+
+
+<BaseLayout
+  title="Pricing — free in-browser PDF conversion, Pro for heavy OCR"
+  description="ZeroUploadPDF pricing in plain numbers: Free includes unlimited native PDF parsing in-browser plus 3 OCR scans/day. Pro is $9/month or $6/month billed yearly."
+  path="/pricing"
+>
+  <PageIntro
+    eyebrow="Pricing"
+    title="Paid for by people who convert every day, not by your data."
+    lede="Free covers a real workflow — unlimited native PDFs and a daily slice of OCR. Pro exists for daily converters who need unlimited scans, big files, and batches. Every limit below is a number, not a vibe."
+  />
+
+  <PricingSection ctaHref="/convert" ctaLabel="Start converting free" />
+
+  <section class="border-b border-border bg-surface">
+    <div class="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-[clamp(1.75rem,3.5vw,2.25rem)] font-semibold leading-[1.15] tracking-[-0.015em] text-ink">
+          What paying for it actually buys
+        </h2>
+        <p class="mt-4 text-[1.125rem] leading-relaxed text-muted">
+          Three things Pro changes — quantity, size, and waiting.
+        </p>
+      </div>
+      <div class="mx-auto mt-12 grid max-w-4xl gap-5 md:grid-cols-3">
+        {notes.map((note) => (
+          <article class="rounded-lg border border-border bg-paper p-6">
+            <span class="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary">
+              <Icon name={note.icon} class="h-4.5 w-4.5" />
+            </span>
+            <h3 class="mt-4 font-display text-base font-semibold text-ink">{note.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted">{note.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div class="bg-paper">
+    <Faq />
+  </div>
+  <div class="bg-paper border-b border-border">
+    <div class="mx-auto w-full max-w-3xl px-5 pb-16 text-center sm:px-6 lg:px-8">
+      <p class="text-sm text-muted">
+        Questions about a team plan, invoices for your accounting department, or
+        a tight OCR budget? Write to{' '}
+        <a href="mailto:hello@zerouploadpdf.com" class="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+          hello@zerouploadpdf.com
+        </a>
+        .
+      </p>
+    </div>
+  </div>
+</BaseLayout>

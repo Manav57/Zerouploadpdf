@@ -1,0 +1,110 @@
+---
+import { freeTier, proTier, commonLimits } from '../data/site';
+import SectionHeading from './SectionHeading.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  ctaHref?: string;
+  ctaLabel?: string;
+}
+
+const { ctaHref = '/convert', ctaLabel = 'Start converting — free' } = Astro.props;
+---
+
+
+
+<section id="pricing" class="scroll-mt-24 border-b border-border bg-paper">
+  <div class="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <SectionHeading
+      eyebrow="Pricing"
+      title={[
+        { text: 'Plain numbers, ' },
+        { text: 'no asterisks.', accent: true },
+      ]}
+      lede="Free covers a real workflow — unlimited native PDFs plus a daily slice of OCR. Pro exists for the people who convert every day."
+    />
+
+    <div class="mx-auto mt-12 grid max-w-4xl items-start gap-6 md:grid-cols-2">
+      <article class="rounded-lg border border-border bg-surface p-6 shadow-card sm:p-7">
+        <div class="flex items-baseline justify-between">
+          <h3 class="font-display text-xl font-semibold text-ink">{freeTier.name}</h3>
+          <p class="font-display text-3xl font-semibold text-ink">$0</p>
+        </div>
+        <p class="mt-1.5 text-sm text-muted">{freeTier.tagline}</p>
+        <ul class="mt-6 space-y-4">
+          {freeTier.features.map((f) => (
+            <li class="flex gap-3">
+              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary">
+                <Icon name="check" class="h-3 w-3" />
+              </span>
+              <div>
+                <p class="text-sm font-medium leading-snug text-ink">{f.text}</p>
+                <p class="mt-0.5 text-sm leading-relaxed text-muted">{f.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </article>
+
+      <article class="relative rounded-lg border-2 border-primary bg-surface p-6 shadow-raised sm:p-7">
+        <span class="absolute -top-3 right-6 rounded-full bg-primary px-3 py-1 font-mono text-[0.7rem] font-medium uppercase tracking-[0.08em] text-white">
+          Most popular
+        </span>
+        <div class="flex items-baseline justify-between">
+          <h3 class="font-display text-xl font-semibold text-ink">{proTier.name}</h3>
+          <div class="text-right">
+            <p class="font-display text-3xl font-semibold text-ink">
+              ${proTier.priceMonthly}
+              <span class="text-sm font-normal text-muted">/mo</span>
+            </p>
+            <p class="text-xs text-muted">or ${proTier.priceYearly}/mo billed yearly</p>
+          </div>
+        </div>
+        <p class="mt-2 text-sm text-muted">{proTier.tagline}</p>
+        <ul class="mt-6 space-y-4">
+          {proTier.features.map((f) => (
+            <li class="flex gap-3">
+              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary">
+                <Icon name="check" class="h-3 w-3" />
+              </span>
+              <div>
+                <p class="text-sm font-medium leading-snug text-ink">{f.text}</p>
+                <p class="mt-0.5 text-sm leading-relaxed text-muted">{f.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </article>
+    </div>
+
+    <p class="mx-auto mt-6 max-w-xl text-center text-sm text-muted">
+      Every plan includes in-browser native parsing, the table preview, and no
+      forced signup for single conversions.
+    </p>
+
+    <div class="mx-auto mt-10 max-w-4xl rounded-lg border border-border bg-surface p-6 sm:p-7" id="limits">
+      <h3 class="font-display text-lg font-semibold text-ink">All limits in one place</h3>
+      <dl class="mt-5 grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-2">
+        {commonLimits.map((item) => (
+          <div class="flex items-baseline justify-between gap-4 bg-surface px-4 py-3.5">
+            <dt class="text-sm text-muted">{item.label}</dt>
+            <dd class="text-right font-mono text-[0.8125rem] font-medium text-ink">{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="mt-10 text-center">
+      <a
+        href={ctaHref}
+        class="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-7 font-mono text-sm font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-primary-strong"
+      >
+        {ctaLabel}
+        <Icon name="arrow-right" class="h-4 w-4" />
+      </a>
+      <p class="mt-3 font-mono text-[0.72rem] uppercase tracking-[0.08em] text-faint">
+        No card required · nothing to install
+      </p>
+    </div>
+  </div>
+</section>

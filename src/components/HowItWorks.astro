@@ -1,0 +1,106 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import Icon from './Icon.astro';
+
+const nativeSteps = [
+  'Drop your PDF into the converter.',
+  'Text and tables are extracted in-browser, using your own CPU.',
+  'Preview the extracted table, then download .xlsx or .csv.',
+];
+
+const scannedSteps = [
+  'Pages are detected as images, not text.',
+  'Only the scanned pages go to our OCR service — deleted the moment recognition finishes.',
+  'Recognized tables return to your tab, ready to preview and download.',
+];
+---
+
+
+
+<section id="how-it-works" class="scroll-mt-24 border-b border-border bg-surface">
+  <div class="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <SectionHeading
+      eyebrow="How it works"
+      title={[
+        { text: 'Two paths, ' },
+        { text: 'one promise.' },
+      ]}
+      lede="Documents decide the route. Text-based PDFs stay on your machine; genuine scans take a short, documented trip there and back."
+    />
+
+    <div class="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
+      <article class="overflow-hidden rounded-lg border border-border bg-paper">
+        <div class="flex items-center justify-between border-b border-border bg-primary-soft/60 px-5 py-3">
+          <h3 class="font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-primary">
+            Path A · Native PDF
+          </h3>
+          <Icon name="cpu" class="h-4.5 w-4.5 text-primary" />
+        </div>
+        <ol class="p-5 sm:p-6">
+          {nativeSteps.map((step, i) => (
+            <li class="relative flex gap-4 pb-6 last:pb-0">
+              {i < nativeSteps.length - 1 && (
+                <span class="absolute left-[1.05rem] top-8 h-[calc(100%-2rem)] w-px bg-border" aria-hidden="true"></span>
+              )}
+              <span
+                class="z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-strong bg-surface font-mono text-[0.7rem] font-medium text-primary"
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <p class="pt-1.5 text-[0.9375rem] leading-relaxed text-ink-soft">{step}</p>
+            </li>
+          ))}
+        </ol>
+        <div class="border-t border-border bg-surface px-5 py-3">
+          <p class="flex items-center gap-1.5 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-primary">
+            <Icon name="lock" class="h-3.5 w-3.5" />
+            Nothing leaves the tab
+          </p>
+        </div>
+      </article>
+
+      <article class="overflow-hidden rounded-lg border border-border bg-paper">
+        <div class="flex items-center justify-between border-b border-border bg-accent-soft/60 px-5 py-3">
+          <h3 class="font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-accent">
+            Path B · Scanned PDF
+          </h3>
+          <Icon name="scan" class="h-4.5 w-4.5 text-accent" />
+        </div>
+        <ol class="p-5 sm:p-6">
+          {scannedSteps.map((step, i) => (
+            <li class="relative flex gap-4 pb-6 last:pb-0">
+              {i < scannedSteps.length - 1 && (
+                <span class="absolute left-[1.05rem] top-8 h-[calc(100%-2rem)] w-px bg-border" aria-hidden="true"></span>
+              )}
+              <span
+                class="z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-strong bg-surface font-mono text-[0.7rem] font-medium text-accent"
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <p class="pt-1.5 text-[0.9375rem] leading-relaxed text-ink-soft">{step}</p>
+            </li>
+          ))}
+        </ol>
+        <div class="border-t border-border bg-surface px-5 py-3">
+          <p class="flex items-center gap-1.5 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-accent">
+            <Icon name="refresh" class="h-3.5 w-3.5" />
+            In and out — the shortest possible trip
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <div class="mx-auto mt-8 flex max-w-4xl flex-col items-center justify-between gap-4 rounded-lg border border-border bg-paper px-6 py-5 sm:flex-row">
+      <p class="flex items-center gap-2.5 text-[0.9375rem] text-ink-soft">
+        <Icon name="eye" class="h-4.5 w-4.5 shrink-0 text-primary" />
+        Both paths end with a table preview. You never download blind.
+      </p>
+      <a
+        href="/convert"
+        class="font-mono text-[0.7rem] font-medium uppercase tracking-[0.08em] text-primary transition-colors hover:text-primary-strong"
+      >
+        Open the converter →
+      </a>
+    </div>
+  </div>
+</section>

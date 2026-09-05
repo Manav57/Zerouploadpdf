@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#FAF7F1" />
+  <rect y="0" width="1200" height="8" fill="#0E6B52" />
+
+  <rect x="96" y="120" width="132" height="132" rx="26" fill="#FFFFFF" stroke="#1C1917" stroke-width="6" stroke-linejoin="round" />
+  <rect x="118" y="142" width="88" height="34" rx="10" fill="#0E6B52" />
+  <path d="M118 200h88M118 222h88M118 244h56" stroke="#4F4943" stroke-width="9" stroke-linecap="round" />
+  <circle cx="236" cy="142" r="26" fill="#FAF7F1" />
+  <circle cx="236" cy="142" r="19" stroke="#0E6B52" stroke-width="9" />
+  <path d="m229 142 5 5 12-12" stroke="#0E6B52" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+
+  <text x="96" y="130" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" letter-spacing="2" fill="#0E6B52" text-transform="uppercase">PDF → EXCEL / CSV</text>
+
+  <text x="94" y="352" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700" letter-spacing="-2" fill="#1C1917">
+    Your file never leaves
+  </text>
+  <text x="94" y="444" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700" letter-spacing="-2" fill="#0E6B52">
+    your browser.
+  </text>
+
+  <text x="96" y="512" font-family="Arial, Helvetica, sans-serif" font-size="30" fill="#6E685F">
+    Native PDFs are parsed on your device — zero upload. Free OCR for scanned files, deleted on the spot.
+  </text>
+
+  <rect x="94" y="560" width="248" height="56" rx="14" fill="#0E6B52" />
+  <text x="218" y="596" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" fill="#FFFFFF" text-anchor="middle">CONVERT A PDF</text>
+
+  <text x="906" y="596" font-family="monospace" font-size="20" letter-spacing="1" fill="#8C867C">No uploads · No accounts · Free OCR: 3/day</text>
+</svg>

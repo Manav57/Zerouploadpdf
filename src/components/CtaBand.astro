@@ -1,0 +1,49 @@
+---
+import Icon from './Icon.astro';
+---
+
+
+
+<section class="bg-ink">
+  <div class="mx-auto flex w-full max-w-6xl flex-col items-center px-5 py-16 text-center sm:px-6 sm:py-20 lg:px-8">
+    <p class="font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-[#9fb8ae]">
+      Ready when you are
+    </p>
+    <h2 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,3.5vw,2.5rem)] font-semibold leading-[1.12] tracking-[-0.015em] text-paper">
+      Try it now. Nothing to install, nothing to upload.
+    </h2>
+    <p class="mt-4 max-w-xl text-base leading-relaxed text-paper/70">
+      Drop a PDF in the converter and see the extracted table before you download.
+      Native files never leave your browser — that's the whole point.
+    </p>
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="/convert"
+        class="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-7 font-mono text-sm font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-primary-strong"
+      >
+        Convert a PDF
+        <Icon name="arrow-right" class="h-4 w-4" />
+      </a>
+      <a
+        href="/privacy"
+        class="inline-flex h-12 items-center gap-2 rounded-md border border-paper/25 px-6 font-mono text-sm font-medium uppercase tracking-[0.06em] text-paper transition-colors hover:border-paper/60"
+      >
+        Read the zero-upload explainer
+      </a>
+    </div>
+    <div class="mt-10 grid w-full max-w-2xl grid-cols-1 gap-px overflow-hidden rounded-md border border-paper/15 bg-paper/15 sm:grid-cols-3">
+      <div class="bg-ink px-4 py-4">
+        <p class="font-display text-2xl font-semibold text-paper">0</p>
+        <p class="mt-1 text-xs text-paper/60">files uploaded for native PDFs</p>
+      </div>
+      <div class="bg-ink px-4 py-4">
+        <p class="font-display text-2xl font-semibold text-paper">3</p>
+        <p class="mt-1 text-xs text-paper/60">free OCR conversions per day</p>
+      </div>
+      <div class="bg-ink px-4 py-4">
+        <p class="font-display text-2xl font-semibold text-paper">100%</p>
+        <p class="mt-1 text-xs text-paper/60">preview before you download</p>
+      </div>
+    </div>
+  </div>
+</section>

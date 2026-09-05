@@ -1,0 +1,78 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+
+const linkGroups = [
+  {
+    heading: 'Convert',
+    links: [
+      { label: 'PDF to Excel', href: '/convert', target: undefined },
+      { label: 'PDF to CSV', href: '/convert?format=csv', target: undefined },
+      { label: 'Scanned PDFs (OCR)', href: '/convert?ocr=1', target: undefined },
+    ],
+  },
+  {
+    heading: 'Product',
+    links: [
+      { label: 'How it works', href: '/#how-it-works' },
+      { label: 'Pricing', href: '/pricing' },
+      { label: 'Privacy & zero-upload', href: '/privacy' },
+    ],
+  },
+  {
+    heading: 'Company',
+    links: [
+      { label: 'Export limits', href: '/pricing#limits' },
+      { label: 'FAQ', href: '/#faq' },
+      { label: 'Start converting', href: '/convert' },
+    ],
+  },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-border bg-paper">
+  <div class="mx-auto w-full max-w-6xl px-5 py-14 sm:px-6 lg:px-8">
+    <div class="grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div class="max-w-sm">
+        <Logo />
+        <p class="mt-4 text-sm leading-relaxed text-muted">
+          PDF to Excel and CSV, converted where it counts — on your device. Native
+          PDFs never leave your browser; only genuine scans reach our OCR service.
+        </p>
+        <p class="mt-4 inline-flex items-center gap-1.5 font-mono text-[0.72rem] uppercase tracking-[0.08em] text-primary">
+          <Icon name="lock" class="h-3.5 w-3.5" />
+          No account required for one-off conversions
+        </p>
+      </div>
+
+      {linkGroups.map((group) => (
+        <nav aria-label={group.heading}>
+          <h3 class="font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-ink-soft">
+            {group.heading}
+          </h3>
+          <ul class="mt-4 space-y-2.5">
+            {group.links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-muted transition-colors hover:text-primary"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))}
+    </div>
+
+    <div
+      class="mt-12 flex flex-col gap-3 border-t border-border pt-6 text-xs text-faint sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {year} ZeroUploadPDF. All rights reserved.</p>
+      <p class="font-mono uppercase tracking-[0.08em]">No uploads. No accounts. No server copies of your data.</p>
+    </div>
+  </div>
+</footer>

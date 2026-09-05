@@ -1,0 +1,241 @@
+---
+
+
+import Icon from './Icon.astro';
+
+interface Props {
+  /** Rendered as an eyebrow above the card. */
+  eyebrow?: string;
+}
+
+const { eyebrow = 'Live converter' } = Astro.props;
+---
+
+<section id="converter" class="scroll-mt-24" aria-label="PDF to Excel converter">
+  {eyebrow && (
+    <p class="mb-4 text-center font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-primary">
+      {eyebrow}
+    </p>
+  )}
+
+  <div
+    id="zup-converter"
+    data-state="idle"
+    data-path="native"
+    class="overflow-hidden rounded-lg border border-border bg-surface shadow-card"
+  >
+    <div class="flex items-center justify-between gap-3 border-b border-border px-5 py-3">
+      <p class="font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-ink-soft">
+        PDF → Excel / CSV
+      </p>
+      <p class="hidden items-center gap-1.5 font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-primary sm:inline-flex">
+        <Icon name="lock" class="h-3.5 w-3.5" />
+        Zero-upload
+      </p>
+    </div>
+
+    <div class="p-5 sm:p-6" role="status" aria-live="polite">
+      <!-- IDLE -->
+      <div data-pane="idle">
+        <button
+          type="button"
+          data-dropzone
+          class="flex w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border-strong bg-paper px-6 py-12 text-center transition-colors hover:border-primary hover:bg-primary-soft/40"
+        >
+          <span
+            class="flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft text-primary"
+          >
+            <Icon name="upload" class="h-5 w-5" />
+          </span>
+          <span class="mt-4 font-display text-lg font-semibold text-ink">
+            Drop a PDF here
+          </span>
+          <span class="mt-1 text-sm text-muted">or browse from your device</span>
+          <span
+            class="mt-5 inline-flex h-10 items-center rounded-md border border-border-strong bg-surface px-4 font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-ink transition-colors hover:border-primary hover:text-primary"
+          >
+            Browse files
+          </span>
+        </button>
+        <input
+          type="file"
+          data-file-input
+          accept="application/pdf,.pdf"
+          class="sr-only"
+          aria-label="Choose a PDF file"
+        />
+
+        <div class="mt-5 flex flex-col items-center justify-between gap-3 sm:flex-row">
+          <fieldset class="inline-flex rounded-md border border-border-strong bg-surface p-0.5">
+            <legend class="sr-only">Output format</legend>
+            <button
+              type="button"
+              data-format="xlsx"
+              class="rounded-[4px] bg-primary px-3.5 py-1.5 font-mono text-[0.72rem] font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-primary-strong"
+            >
+              Excel .xlsx
+            </button>
+            <button
+              type="button"
+              data-format="csv"
+              class="rounded-[4px] px-3.5 py-1.5 font-mono text-[0.72rem] font-medium uppercase tracking-[0.06em] text-muted transition-colors hover:text-ink"
+            >
+              CSV .csv
+            </button>
+          </fieldset>
+          <p class="max-w-xs text-xs leading-relaxed text-faint">
+            Text PDFs are parsed on this device. Scans are sent to OCR and deleted
+            immediately after.
+          </p>
+        </div>
+      </div>
+
+      <!-- READING / UPLOADING -->
+      <div data-pane="reading" hidden>
+        <div class="flex items-center gap-4 px-2 py-8 sm:px-6">
+          <span
+            class="h-9 w-9 shrink-0 animate-spin rounded-full border-2 border-border-strong border-t-primary"
+            aria-hidden="true"
+          ></span>
+          <div class="min-w-0">
+            <p class="truncate font-mono text-sm font-medium text-ink" data-file-name></p>
+            <p class="mt-1 text-sm text-muted">
+              Reading the file on this device&hellip; nothing has been uploaded.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROCESSING -->
+      <div data-pane="processing" hidden>
+        <div class="px-2 py-8 sm:px-6">
+          <div class="flex items-center justify-between gap-3">
+            <p class="font-display text-lg font-semibold text-ink" data-process-title></p>
+            <span
+              class="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[0.7rem] font-medium uppercase tracking-[0.08em]"
+              data-path-tag
+            ></span>
+          </div>
+          <p class="mt-1.5 text-sm text-muted" data-process-sub></p>
+<div class="relative mt-6 h-1.5 overflow-hidden rounded-full bg-surface">
+          <div
+            class="absolute inset-y-0 left-0 w-1/2 animate-[zup-shimmer_1.1s_ease-in-out_infinite] rounded-full bg-primary"
+          ></div>
+        </div>
+          <p class="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-faint" data-progress-label></p>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div data-pane="preview" hidden>
+        <div class="flex items-start gap-3">
+          <span
+            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary"
+          >
+            <Icon name="check" class="h-4 w-4" />
+          </span>
+          <div class="min-w-0">
+            <p class="font-display text-lg font-semibold text-ink">Conversion complete</p>
+            <p class="mt-0.5 truncate text-sm text-muted" data-result-meta></p>
+          </div>
+        </div>
+
+        <div class="mt-4 overflow-hidden rounded-md border border-border-strong">
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[560px] border-collapse text-left text-sm">
+              <thead>
+                <tr class="border-b border-border-strong bg-paper" data-preview-head></tr>
+              </thead>
+              <tbody data-preview-rows></tbody>
+            </table>
+          </div>
+        </div>
+
+        <p class="mt-3 flex items-center gap-1.5 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-faint">
+          <Icon name="eye" class="h-3.5 w-3.5" />
+          Preview before download — extracted data, shown
+          <span data-preview-hint></span>
+        </p>
+
+        <div class="mt-5 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            data-download-xlsx
+            class="inline-flex h-11 items-center gap-2 rounded-md bg-primary px-5 font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-white transition-colors hover:bg-primary-strong"
+          >
+            <Icon name="download" class="h-4 w-4" />
+            Download .xlsx
+          </button>
+          <button
+            type="button"
+            data-download-csv
+            class="inline-flex h-11 items-center gap-2 rounded-md border border-border-strong bg-surface px-5 font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-ink transition-colors hover:border-primary hover:text-primary"
+          >
+            <Icon name="download" class="h-4 w-4" />
+            Download .csv
+          </button>
+          <button
+            type="button"
+            data-reset
+            class="ml-auto inline-flex h-11 items-center gap-2 font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-muted transition-colors hover:text-primary"
+          >
+            <Icon name="refresh" class="h-4 w-4" />
+            Convert another
+          </button>
+        </div>
+      </div>
+
+      <!-- ERROR -->
+      <div data-pane="error" hidden>
+        <div class="flex items-start gap-3 rounded-md border border-danger/25 bg-danger-soft p-4">
+          <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-danger/10 text-danger">
+            <Icon name="alert" class="h-4 w-4" />
+          </span>
+          <div class="min-w-0">
+            <p class="font-display font-semibold text-ink" data-error-title>Couldn't read that file</p>
+            <p class="mt-1 text-sm leading-relaxed text-ink-soft" data-error-message></p>
+          </div>
+        </div>
+        <div class="mt-5 flex items-center gap-3">
+          <button
+            type="button"
+            data-retry
+            class="inline-flex h-11 items-center gap-2 rounded-md bg-primary px-5 font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-white transition-colors hover:bg-primary-strong"
+          >
+            Try again
+          </button>
+          <button
+            type="button"
+            data-reset
+            class="inline-flex h-11 items-center gap-2 rounded-md border border-border-strong bg-surface px-5 font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-ink transition-colors hover:border-primary hover:text-primary"
+          >
+            Start over
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between gap-3 border-t border-border bg-paper px-5 py-3">
+      <p class="flex items-center gap-1.5 font-mono text-[0.72rem] uppercase tracking-[0.08em] text-faint">
+        <Icon name="cpu" class="h-3.5 w-3.5" />
+        Runs client-side where it can
+      </p>
+      <p class="hidden font-mono text-[0.72rem] uppercase tracking-[0.08em] text-faint sm:block">
+        No servers. No sign-up for one-off.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { mountConverter } from '../scripts/converter';
+
+  const run = () => mountConverter(document.getElementById('zup-converter') as HTMLElement);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  document.addEventListener('astro:page-load', run);
+</script>

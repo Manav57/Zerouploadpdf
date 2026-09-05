@@ -1,0 +1,42 @@
+---
+import { faqs } from '../data/site';
+import SectionHeading from './SectionHeading.astro';
+import Icon from './Icon.astro';
+---
+
+
+
+<section id="faq" class="scroll-mt-24 border-b border-border bg-surface">
+  <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <SectionHeading
+      eyebrow="FAQ"
+      title={[
+        { text: 'Asked often, ' },
+        { text: 'answered plainly.', accent: true },
+      ]}
+    />
+
+    <div class="mt-10 border-t border-border">
+      {faqs.map((item) => (
+        <details class="group border-b border-border">
+          <summary
+            class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 transition-colors hover:text-primary [&::-webkit-details-marker]:hidden"
+          >
+            <h3 class="font-display text-base font-semibold text-ink group-hover:text-primary sm:text-lg">
+              {item.q}
+            </h3>
+            <span
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-strong text-ink transition-transform group-open:rotate-180"
+              aria-hidden="true"
+            >
+              <Icon name="chevron-down" class="h-4 w-4" />
+            </span>
+          </summary>
+          <div class="pb-6 pr-10">
+            <p class="text-[0.9375rem] leading-relaxed text-muted">{item.a}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,79 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource/ibm-plex-mono/latin-400.css';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', 'Cascadia Code', Menlo, monospace;
+
+  --color-paper: #faf7f1;
+  --color-surface: #ffffff;
+  --color-ink: #1c1917;
+  --color-ink-soft: #4f4943;
+  --color-muted: #6e685f;
+  --color-faint: #8c867c;
+  --color-border: #e6e0d4;
+  --color-border-strong: #cfc8ba;
+  --color-primary: #0e6b52;
+  --color-primary-strong: #0a513e;
+  --color-primary-soft: #e7f2ed;
+  --color-primary-soft-strong: #d3e6df;
+  --color-accent: #a5661b;
+  --color-accent-soft: #f6ebd9;
+  --color-danger: #a62a1e;
+  --color-danger-soft: #f9e7e4;
+  --color-success: #147a53;
+  --color-ring: #0e6b52;
+
+  --shadow-card:
+    0 1px 2px rgb(28 25 23 / 0.05),
+    0 1px 1px rgb(28 25 23 / 0.03);
+  --shadow-raised: 0 4px 12px rgb(28 25 23 / 0.08);
+}
+
+@keyframes zup-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-primary);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

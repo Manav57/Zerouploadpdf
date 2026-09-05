@@ -1,0 +1,63 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import Icon from './Icon.astro';
+
+const points = [
+  {
+    icon: 'cpu',
+    title: 'Parsed on your device',
+    body: 'Text-based PDFs are read and analyzed in your browser, using your CPU. The bytes never travel.',
+  },
+  {
+    icon: 'lock',
+    title: 'Nothing stored',
+    body: 'No account, no history, no server copy. When the tab closes, the file is gone with it.',
+  },
+  {
+    icon: 'refresh',
+    title: 'OCR deletes itself',
+    body: 'Scanned pages go to the OCR service, get recognized, and are deleted on completion. No archive.',
+  },
+  {
+    icon: 'check',
+    title: 'No signup trap',
+    body: 'A single conversion always works without an account. Signing up is optional, for higher limits.',
+  },
+];
+---
+
+
+
+<section id="trust" class="scroll-mt-24 border-b border-border bg-surface">
+  <div class="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <SectionHeading
+      eyebrow="Security & trust"
+      title={[
+        { text: 'Not an upload-vs-delete story.' },
+        { text: ' A no-upload story.', accent: true },
+      ]}
+      lede="Other tools trumpet that they delete your file after an hour. We'd rather not have it at all."
+    />
+
+    <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {points.map((point) => (
+        <article class="rounded-lg border border-border bg-paper p-5">
+          <span class="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary">
+            <Icon name={point.icon} class="h-4.5 w-4.5" />
+          </span>
+          <h3 class="mt-4 font-display text-base font-semibold text-ink">{point.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-muted">{point.body}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="mx-auto mt-8 max-w-4xl rounded-lg border border-primary/20 bg-primary-soft/50 px-6 py-5">
+      <p class="text-[0.9375rem] leading-relaxed text-ink-soft">
+        <strong class="font-medium text-ink">The distinction matters.</strong> "Deleted after one hour"
+        means the file was on a server at all. Ours never is — native PDFs don't
+        leave the browser, and scanned pages exist on the OCR service for the
+        seconds it takes to read them, nothing more.
+      </p>
+    </div>
+  </div>
+</section>

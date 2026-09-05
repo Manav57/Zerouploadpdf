@@ -1,0 +1,66 @@
+---
+import Converter from './Converter.astro';
+import Icon from './Icon.astro';
+
+const trustPoints = ['No account for one-off conversions', 'Nothing stored', 'Free OCR: 3 scans/day'];
+---
+
+
+
+<section class="border-b border-border bg-paper">
+  <div
+    class="mx-auto grid w-full max-w-6xl items-center gap-12 px-5 py-14 sm:px-6 sm:py-16 lg:grid-cols-12 lg:gap-10 lg:px-8 lg:py-20"
+  >
+    <div class="lg:col-span-7">
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface px-3 py-1 font-mono text-[0.7rem] font-medium uppercase tracking-[0.08em] text-primary"
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+        PDF → Excel / CSV · privacy-first
+      </p>
+
+      <h1
+        class="mt-5 font-display text-[clamp(2.25rem,5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-ink"
+      >
+        Your file never
+        <span class="text-primary">leaves your browser.</span>
+      </h1>
+
+      <p class="mt-5 max-w-[45ch] text-lg leading-relaxed text-muted">
+        ZeroUploadPDF converts PDFs to Excel and CSV on your own device. Native PDFs
+        are parsed right here in the tab — zero upload, zero waiting on a server.
+        Scanned files use OCR that's <strong class="font-medium text-ink">free every day</strong> and
+        deleted the moment it's done.
+      </p>
+
+      <div class="mt-7 flex flex-wrap items-center gap-3">
+        <a
+          href="#converter"
+          class="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 font-mono text-sm font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-primary-strong"
+        >
+          Convert a PDF free
+          <Icon name="arrow-down" class="h-4 w-4" />
+        </a>
+        <a
+          href="#how-it-works"
+          class="inline-flex h-12 items-center gap-2 rounded-md border border-border-strong bg-surface px-6 font-mono text-sm font-medium uppercase tracking-[0.06em] text-ink transition-colors hover:border-primary hover:text-primary"
+        >
+          How it works
+        </a>
+      </div>
+
+      <ul class="mt-7 flex flex-wrap gap-x-6 gap-y-2">
+        {trustPoints.map((point) => (
+          <li class="flex items-center gap-1.5 text-sm text-ink-soft">
+            <Icon name="check" class="h-4 w-4 text-primary" />
+            {point}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="lg:col-span-5">
+      <Converter eyebrow="Try it right here" />
+    </div>
+  </div>
+</section>
