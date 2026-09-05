@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../i18n';
+import { goto } from 'astro:client';
+
+interface AuthCardProps {
+  action: 'signin' | 'signup' | 'forgot' | 'reset' | 'verify' | 'account';
+  t: typeof t;
+  onSuccess?: () => void;
+}
+
+export const AuthCard = Astro.props.AuthCard;
+
+const handlSubmit = async (e: HTMLFormElement, action: string) => {
+  e.preventDefault();
+  const formData = new FormData(e);
+  const data = Object.fromEntries(formData.entries()) as {
+    email?: string;
+    name?: string;
+    password?: string;
+    passwordConfirm?: string;
+  };
+
+  try {
+    const res = await fetch(`/api/auth/${action}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: window.location.origin,
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+
+    if (!response.ok) {
+      // show error
+      ;(e.target as HTMLFormElement).querySelector('.error')!.textContent = result.error || 'An error occurred';
+      return;
+    }
+
+    // Store token/user
+    if (result.token) localStorage.setItem('zup:token', result.token);
+    if (result.user) localStorage.setItem('zup:user', JSON.stringify(result.user));
+
+    onSuccess?.();
+    goto('/');
+  } catch (err) {
+    ;(e.target as HTMLFormElement).querySelector('.error')!.textContent = 'Network error';
+  }
+};
+
+export const AuthCard = ({ action, t }: { action: string; t: typeof t }) => {
+  return (
+    <div className="max-w-md mx-auto p-6 bg-surface rounded-lg shadow-card">
+      <h2 className="font-display text-[clamp(1.75rem,5vw,2.5rem)] font-semibold text-ink mb-6">
+        {t?.auth?.[`${action}Title`] ?? 'Sign in'}
+      </h2>
+
+      <form onSubmit={(e) => handlSubmit(e, action)} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-ink mb-2">
+            {t?.auth?.email ?? 'Email'}
+          </label>
+          <input
+            type="email"
+            required
+            autocomplete="email"
+            placeholder={t?.auth?.email ?? 'email@example.com'}
+            className="w-full border border-border rounded-lg p-3 focus:border-primary transition-colors"
+          />
+        </div>
+        {action === 'signup' && (
+          <>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-2">
+                {t?.auth?.name ?? 'Name'}
+              </label>
+              <input
+                type="text"
+                required
+                autocomplete="name"
+                placeholder={t?.auth?.name ?? 'Your name'}
+                className="w-full border border-border rounded-lg p-3 focus:border-primary transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-2">
+                {t?.auth?.password ?? 'Password'}
+              </label>
+              <input
+                type="password"
+                required
+                autocomplete="new-password"
+                placeholder={t?.auth?.password ?? '••••••••'}
+                className="w-full border border-border rounded-lg p-3 focus:border-primary transition-colors"
+              />
+              <label className="block text-sm font-medium text-ink mb-2">
+                {t?.auth?.passwordConfirm ?? 'Confirm password'}
+              </label>
+              <input
+                type="password"
+                required
+                autocomplete="password"
+                placeholder={t?.auth?.passwordConfirm ?? '••••••••'}
+                className="w-full border border-border rounded-lg p-3 focus:border-primary transition-colors"
+              />
+            )}
+            {action === 'forgot' && (
+              <p className="text-sm text-muted">{t?.auth?.forgotLink ?? 'Forgot your password?'}</p>
+            )}
+          </>
+        )}
+        <button
+          type="submit"
+          className="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary-strong transition-colors"
+        >
+          Submit
+        </button>
+
+        {/** Error message placeholders would be injected by the form handler */}
+      </form>
+    </div>
+  );
+};

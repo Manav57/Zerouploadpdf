@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PrivacyBody from '../../components/PrivacyBody.astro';
+import { getLoc } from '../../i18n';
+
+export function getStaticPaths() {
+  return ['es', 'ja', 'fr', 'de', 'pt', 'ko', 'it'].map((code) => ({
+    params: { locale: code },
+    props: { t: getLoc(code) },
+  }));
+}
+
+const { t } = Astro.props;
+---
+
+<BaseLayout title={t.privacy.metaTitle} description={t.privacy.metaDesc} path="/privacy" t={t}>
+  <PrivacyBody data={t.privacy} base={t.base} />
+</BaseLayout>

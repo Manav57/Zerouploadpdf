@@ -1,0 +1,35 @@
+---
+import PageIntro from './PageIntro.astro';
+
+export interface LegalSection {
+  h: string;
+  ps: string[];
+}
+export interface LegalData {
+  intro: { eyebrow: string; title: string; lede: string };
+  sections: LegalSection[];
+}
+
+interface Props {
+  data: LegalData;
+}
+
+const { data } = Astro.props;
+---
+
+<PageIntro eyebrow={data.intro.eyebrow} title={data.intro.title} lede={data.intro.lede} />
+
+<section class="bg-paper">
+  <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    {data.sections.map((section) => (
+      <div class="mb-12 last:mb-0">
+        <h2 class="font-display text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-[1.15] tracking-[-0.015em] text-ink">
+          {section.h}
+        </h2>
+        {section.ps.map((p) => (
+          <p class="mt-3 text-[0.9375rem] leading-relaxed text-ink-soft">{p}</p>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>

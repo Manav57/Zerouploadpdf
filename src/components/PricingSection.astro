@@ -1,0 +1,138 @@
+---
+import { freeTier, proTier, commonLimits } from '../data/site';
+import SectionHeading from './SectionHeading.astro';
+import Icon from './Icon.astro';
+import type { Loc } from '../i18n/types';
+
+interface Props {
+  ctaHref?: string;
+  ctaLabel?: string;
+  t?: Loc;
+}
+
+const { ctaHref = '/convert', ctaLabel = 'Start converting — free', t } = Astro.props;
+
+const free = t?.pricing.free ?? {
+  name: freeTier.name,
+  tagline: freeTier.tagline,
+  features: freeTier.features,
+};
+const pro = t?.pricing.pro ?? {
+  name: proTier.name,
+  tagline: proTier.tagline,
+  priceMonthly: proTier.priceMonthly,
+  priceYearly: proTier.priceYearly,
+  features: proTier.features,
+};
+const limits = t?.pricing.limits ?? commonLimits;
+const eyebrow = t?.pricing.eyebrow ?? 'Pricing';
+const titleA = t?.pricing.titleA ?? 'Plain numbers, ';
+const titleB = t?.pricing.titleB ?? 'no asterisks.';
+const lede = t?.pricing.lede ?? 'Free covers a real workflow — 10 conversions a day across every format. Pro exists for the people who convert every day.';
+const popular = t?.pricing.pro.popular ?? 'Most popular';
+const perMo = t?.pricing.pro.perMo ?? '/mo';
+const orYear = (t?.pricing.pro.orYear ?? 'or ${yearly}/mo billed yearly').replace(
+  '${yearly}',
+  `$${proTier.priceYearly}`,
+);
+const plansNote = t?.pricing.plansNote ?? 'Every plan includes in-browser native parsing, the table preview, and no forced signup for single conversions.';
+const limitsTitle = t?.pricing.limitsTitle ?? 'All limits in one place';
+const noCard = t?.pricing.noCard ?? 'No card required · nothing to install';
+---
+
+
+
+<section id="pricing" class="scroll-mt-24 border-b border-border bg-paper">
+  <div class="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <SectionHeading
+      eyebrow={eyebrow}
+      title={[
+        { text: titleA },
+        { text: titleB, accent: true },
+      ]}
+      lede={lede}
+    />
+
+    <div class="mx-auto mt-12 grid max-w-4xl items-start gap-6 md:grid-cols-2">
+      <article class="rounded-lg border border-border bg-surface p-6 shadow-card sm:p-7">
+        <div class="flex items-baseline justify-between">
+          <h3 class="font-display text-xl font-semibold text-ink">{free.name}</h3>
+          <p class="font-display text-3xl font-semibold text-ink">$0</p>
+        </div>
+        <p class="mt-1.5 text-sm text-muted">{free.tagline}</p>
+        <ul class="mt-6 space-y-4">
+          {free.features.map((f) => (
+            <li class="flex gap-3">
+              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary">
+                <Icon name="check" class="h-3 w-3" />
+              </span>
+              <div>
+                <p class="text-sm font-medium leading-snug text-ink">{f.text}</p>
+                <p class="mt-0.5 text-sm leading-relaxed text-muted">{f.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </article>
+
+      <article class="relative rounded-lg border-2 border-primary bg-surface p-6 shadow-raised sm:p-7">
+        <span class="absolute -top-3 right-6 rounded-full bg-primary px-3 py-1 font-mono text-[0.7rem] font-medium uppercase tracking-[0.08em] text-white">
+          {popular}
+        </span>
+        <div class="flex items-baseline justify-between">
+          <h3 class="font-display text-xl font-semibold text-ink">{pro.name}</h3>
+          <div class="text-right">
+            <p class="font-display text-3xl font-semibold text-ink">
+              ${proTier.priceMonthly}
+              <span class="text-sm font-normal text-muted">{perMo}</span>
+            </p>
+            <p class="text-xs text-muted">{orYear}</p>
+          </div>
+        </div>
+        <p class="mt-2 text-sm text-muted">{pro.tagline}</p>
+        <ul class="mt-6 space-y-4">
+          {pro.features.map((f) => (
+            <li class="flex gap-3">
+              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary">
+                <Icon name="check" class="h-3 w-3" />
+              </span>
+              <div>
+                <p class="text-sm font-medium leading-snug text-ink">{f.text}</p>
+                <p class="mt-0.5 text-sm leading-relaxed text-muted">{f.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </article>
+    </div>
+
+    <p class="mx-auto mt-6 max-w-xl text-center text-sm text-muted">
+      {plansNote}
+    </p>
+
+    <div class="mx-auto mt-10 max-w-4xl rounded-lg border border-border bg-surface p-6 sm:p-7" id="limits">
+      <h3 class="font-display text-lg font-semibold text-ink">{limitsTitle}</h3>
+      <dl class="mt-5 grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-2">
+        {limits.map((item) => (
+          <div class="flex items-baseline justify-between gap-4 bg-surface px-4 py-3.5">
+            <dt class="text-sm text-muted">{item.label}</dt>
+            <dd class="text-right font-mono text-[0.8125rem] font-medium text-ink">{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="mt-10 text-center">
+      <a
+        href={ctaHref}
+        class="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-7 font-mono text-sm font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-primary-strong"
+      >
+        {ctaLabel}
+        <Icon name="arrow-right" class="h-4 w-4" />
+      </a>
+      <p class="mt-3 font-mono text-[0.72rem] uppercase tracking-[0.08em] text-faint">
+        {noCard}
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuthCard from '../../components/AuthCard.astro';
+import { getLoc } from '../../i18n';
+
+export const props = {
+  t: getLoc('en'),
+};
+
+---
+
+<BaseLayout
+  title={t?.auth?.verify?.title ?? 'Verify email'}
+  description={t?.auth?.verify?.metaDesc ?? 'Click the link in your email'}
+  path="/verify-email"
+  t={t}
+>
+  <AuthCard
+    action="verify"
+    t={t}
+    onSuccess={() => {
+      window.location.href = '/';
+    }}
+  />
+</BaseLayout>
+---

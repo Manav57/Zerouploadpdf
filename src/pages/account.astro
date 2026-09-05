@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuthCard from '../../components/AuthCard.astro';
+import { getLoc } from '../../i18n';
+
+export const props = {
+  t: getLoc('en'),
+};
+
+---
+
+<BaseLayout
+  title={t?.auth?.accountPage?.title ?? 'My account'}
+  description={t?.auth?.accountPage?.metaDesc ?? 'Manage your account settings'}
+  path="/account"
+  t={t}
+>
+  <AuthCard
+    action="account"
+    t={t}
+    onSuccess={() => {
+      window.location.href = '/';
+    }}
+  />
+</BaseLayout>
+---

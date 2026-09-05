@@ -1,0 +1,80 @@
+---
+import Converter from './Converter.astro';
+import Icon from './Icon.astro';
+import type { Loc } from '../i18n/types';
+
+interface Props {
+  t?: Loc;
+}
+
+const { t } = Astro.props;
+const trustPoints = t?.hero.trust ?? ['No account for one-off conversions', 'Nothing stored', '10 free conversions daily'];
+const badge = t?.hero.badge ?? 'PDF → Excel / CSV · privacy-first';
+const h1a = t?.hero.h1a ?? 'Your file never';
+const h1b = t?.hero.h1b ?? 'leaves your browser.';
+const subLead = t?.hero.subLead ?? 'ZeroUploadPDF converts PDFs to Excel and CSV on your own device. Native PDFs are parsed right here in the tab — zero upload, zero waiting on a server.';
+const subNative = t?.hero.subNative ?? 'Scanned files use OCR that\'s';
+const subOcr = t?.hero.subOcr ?? 'free every day';
+const subTail = t?.hero.subTail ?? ' and deleted the moment it\'s done.';
+const cta = t?.hero.cta ?? 'Convert a PDF free';
+const how = t?.hero.how ?? 'How it works';
+const converterEyebrow = t?.hero.converterEyebrow ?? 'Try it right here';
+---
+
+
+
+<section class="border-b border-border bg-paper">
+  <div
+    class="mx-auto grid w-full max-w-6xl items-center gap-12 px-5 py-14 sm:px-6 sm:py-16 lg:grid-cols-12 lg:gap-10 lg:px-8 lg:py-20"
+  >
+    <div class="lg:col-span-7">
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface px-3 py-1 font-mono text-[0.7rem] font-medium uppercase tracking-[0.08em] text-primary"
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+        {badge}
+      </p>
+
+      <h1
+        class="mt-5 font-display text-[clamp(2.25rem,5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-ink"
+      >
+        {h1a}{' '}
+        <span class="text-primary">{h1b}</span>
+      </h1>
+
+      <p class="mt-5 max-w-[45ch] text-lg leading-relaxed text-muted">
+        {subLead}{' '}
+        {subNative} <strong class="font-medium text-ink">{subOcr}</strong>{subTail}
+      </p>
+
+      <div class="mt-7 flex flex-wrap items-center gap-3">
+        <a
+          href="#converter"
+          class="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 font-mono text-sm font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-primary-strong"
+        >
+          {cta}
+          <Icon name="arrow-down" class="h-4 w-4" />
+        </a>
+        <a
+          href="#how-it-works"
+          class="inline-flex h-12 items-center gap-2 rounded-md border border-border-strong bg-surface px-6 font-mono text-sm font-medium uppercase tracking-[0.06em] text-ink transition-colors hover:border-primary hover:text-primary"
+        >
+          {how}
+        </a>
+      </div>
+
+      <ul class="mt-7 flex flex-wrap gap-x-6 gap-y-2">
+        {trustPoints.map((point) => (
+          <li class="flex items-center gap-1.5 text-sm text-ink-soft">
+            <Icon name="check" class="h-4 w-4 text-primary" />
+            {point}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="lg:col-span-5">
+      <Converter eyebrow={converterEyebrow} t={t} />
+    </div>
+  </div>
+</section>

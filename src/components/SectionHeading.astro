@@ -1,0 +1,33 @@
+---
+interface Seg {
+  text: string;
+  accent?: boolean;
+}
+interface Props {
+  eyebrow?: string;
+  title: Seg[];
+  lede?: string;
+  center?: boolean;
+  className?: string;
+}
+
+const { eyebrow, title, lede, center = true, className } = Astro.props;
+---
+
+<div class:list={[{ 'mx-auto max-w-2xl': center, 'text-center': center }, className]}>
+  {eyebrow && (
+    <p class="font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-primary">
+      {eyebrow}
+    </p>
+  )}
+  <h2
+    class:list={[
+      'mt-3 font-display text-[clamp(1.75rem,3.5vw,2.25rem)] font-semibold leading-[1.15] tracking-[-0.015em] text-ink',
+    ]}
+  >
+    {title.map((seg) => (
+      <span class:list={[{ 'text-primary': seg.accent }]}>{seg.text}</span>
+    ))}
+  </h2>
+  {lede && <p class="mt-4 text-[1.125rem] leading-relaxed text-muted">{lede}</p>}
+</div>

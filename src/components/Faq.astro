@@ -1,0 +1,64 @@
+---
+import { faqs as enFaqs } from '../data/site';
+import SectionHeading from './SectionHeading.astro';
+import Icon from './Icon.astro';
+import type { Loc } from '../i18n/types';
+
+interface Props {
+  t?: Loc;
+}
+const { t } = Astro.props;
+const base = t?.base ?? '';
+const faqs = t?.faqs ?? enFaqs;
+const eyebrow = t?.faq.eyebrow ?? 'FAQ';
+const titleA = t?.faq.titleA ?? 'Asked often, ';
+const titleB = t?.faq.titleB ?? 'answered plainly.';
+const more = t?.faq.more ?? 'Read all 13 questions →';
+---
+
+
+
+<section id="faq" class="scroll-mt-24 border-b border-border bg-surface">
+  <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <SectionHeading
+      eyebrow={eyebrow}
+      title={[
+        { text: titleA },
+        { text: titleB, accent: true },
+      ]}
+    />
+
+    <div class="mt-10 border-t border-border">
+      {faqs.map((item) => (
+        <details class="group border-b border-border">
+          <summary
+            class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 transition-colors hover:text-primary [&::-webkit-details-marker]:hidden"
+          >
+            <h3 class="font-display text-base font-semibold text-ink group-hover:text-primary sm:text-lg">
+              {item.q}
+            </h3>
+            <span
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-strong text-ink transition-transform group-open:rotate-180"
+              aria-hidden="true"
+            >
+              <Icon name="chevron-down" class="h-4 w-4" />
+            </span>
+          </summary>
+          <div class="pb-6 pr-10">
+            <p class="text-[0.9375rem] leading-relaxed text-muted">{item.a}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <p class="mt-8 text-center text-sm text-muted">
+      {t?.faq.moreLead ?? 'More detail on every answer?'}
+      <a
+        href={`${base}/questions`}
+        class="-m-3 inline-block p-3 font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary-strong"
+      >
+        {more}
+      </a>
+    </p>
+  </div>
+</section>

@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import Icon from '../../components/Icon.astro';
+import { getLoc } from '../../i18n';
+
+export function getStaticPaths() {
+  return ['es', 'ja', 'fr', 'de', 'pt', 'ko', 'it'].map((code) => ({
+    params: { locale: code },
+    props: { t: getLoc(code) },
+  }));
+}
+
+const { t } = Astro.props;
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: t.code,
+  mainEntity: t.faqs.map((f) => ({
+    '@type': 'Question',
+    inLanguage: t.code,
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', inLanguage: t.code, text: f.a },
+  })),
+};
+---
+
+<BaseLayout title={t.questions.metaTitle} description={t.questions.metaDesc} path="/questions" t={t}>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+
+  <section class="border-b border-border bg-paper">
+    <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+      <SectionHeading
+        eyebrow={t.questions.intro.eyebrow}
+        title={[
+          { text: t.questions.intro.titleA },
+          { text: t.questions.intro.titleB, accent: true },
+        ]}
+        lede={t.questions.intro.lede}
+      />
+
+      <div class="mt-10 border-t border-border">
+        {t.faqs.map((item, i) => (
+          <details class="group border-b border-border" open={i < 3}>
+            <summary
+              class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 transition-colors hover:text-primary [&::-webkit-details-marker]:hidden"
+            >
+              <h2 class="font-display text-base font-semibold text-ink group-hover:text-primary sm:text-lg">
+                {item.q}
+              </h2>
+              <span
+                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-strong text-ink transition-transform group-open:rotate-180"
+                aria-hidden="true"
+              >
+                <Icon name="chevron-down" class="h-4 w-4" />
+              </span>
+            </summary>
+            <div class="pb-6 pr-10">
+              <p class="text-[0.9375rem] leading-relaxed text-muted">{item.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+
+      <p class="mt-10 text-[0.9375rem] text-muted">
+        {t.questions.note}
+      </p>
+    </div>
+  </section>
+</BaseLayout>

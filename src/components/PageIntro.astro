@@ -1,0 +1,49 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+  /** Visual flag, e.g. "converter", "paper". Currently unused, reserved. */
+  tone?: 'plain' | 'converter' | 'dark';
+}
+
+const { eyebrow, title, lede, tone = 'plain' } = Astro.props;
+---
+
+
+
+<header
+  class:list={[
+    'border-b border-border',
+    tone === 'dark' ? 'bg-ink' : 'bg-paper',
+  ]}
+>
+  <div class="mx-auto w-full max-w-6xl px-5 pb-12 pt-14 sm:px-6 sm:pb-16 sm:pt-16 lg:px-8">
+    <p
+      class:list={[
+        'font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em]',
+        tone === 'dark' ? 'text-[#9fb8ae]' : 'text-primary',
+      ]}
+    >
+      {eyebrow}
+    </p>
+    <h1
+      class:list={[
+        'mt-4 max-w-3xl font-display text-[clamp(2rem,4.5vw,3rem)] font-semibold leading-[1.08] tracking-[-0.02em]',
+        tone === 'dark' ? 'text-paper' : 'text-ink',
+      ]}
+    >
+      {title}
+    </h1>
+    {lede && (
+      <p
+        class:list={[
+          'mt-5 max-w-2xl text-lg leading-relaxed',
+          tone === 'dark' ? 'text-paper/70' : 'text-muted',
+        ]}
+      >
+        {lede}
+      </p>
+    )}
+  </div>
+</header>

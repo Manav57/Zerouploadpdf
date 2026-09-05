@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Converter from '../components/Converter.astro';
+---
+
+
+
+<BaseLayout
+  title="PDF to Excel Converter — free, in your browser"
+  description="Convert PDF to Excel or CSV free. Native PDFs are parsed entirely in your browser with zero upload; scanned PDFs use free daily OCR. Preview before you download."
+  path="/convert"
+>
+  <PageIntro
+    eyebrow="Converter"
+    title="PDF to Excel and CSV, without the upload."
+    lede="Drop a file below. Text-based PDFs are parsed on this device — your document never leaves your browser. Scanned files take a brief, documented trip to OCR and are deleted the instant it finishes."
+  />
+
+  <section class="border-b border-border bg-surface">
+    <div class="mx-auto w-full max-w-3xl px-5 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <Converter />
+      <div class="mt-6 grid gap-3 text-center text-xs text-faint sm:grid-cols-3 sm:gap-6">
+        <p>PDF published after 2008, digitally signed, or born-digital → parsed locally</p>
+        <p>Scanned or photographed pages → free OCR quota applies</p>
+        <p>No account, no watermark, no server copy</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,110 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource/ibm-plex-mono/latin-400.css';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', 'Cascadia Code', Menlo, monospace;
+
+  --color-paper: #faf7f1;
+  --color-surface: #ffffff;
+  --color-ink: #1c1917;
+  --color-ink-soft: #4f4943;
+  --color-muted: #6e685f;
+  --color-faint: #8c867c;
+  --color-border: #e6e0d4;
+  --color-border-strong: #cfc8ba;
+  --color-primary: #0e6b52;
+  --color-primary-strong: #0a513e;
+  --color-primary-soft: #e7f2ed;
+  --color-primary-soft-strong: #d3e6df;
+  --color-accent: #a5661b;
+  --color-accent-soft: #f6ebd9;
+  --color-danger: #a62a1e;
+  --color-danger-soft: #f9e7e4;
+  --color-success: #147a53;
+  --color-ring: #0e6b52;
+
+  --shadow-card:
+    0 1px 2px rgb(28 25 23 / 0.05),
+    0 1px 1px rgb(28 25 23 / 0.03);
+  --shadow-raised: 0 4px 12px rgb(28 25 23 / 0.08);
+}
+
+/* Dark theme tokens — derived from the light palette (deep warm neutrals
+   mirror paper/surface/ink; soft backgrounds reuse the identical hue shifts
+   as their light counterparts). Applied via the `.dark` class on <html>,
+   which the boot script sets before first paint. */
+.dark {
+  --color-paper: #171512;
+  --color-surface: #1f1c18;
+  --color-ink: #f2eee7;
+  --color-ink-soft: #d8d2c6;
+  --color-muted: #a8a093;
+  --color-faint: #857c6f;
+  --color-border: #332e27;
+  --color-border-strong: #4a443a;
+  --color-primary: #3fae8a;
+  --color-primary-strong: #52c19c;
+  --color-primary-soft: #123f30;
+  --color-primary-soft-strong: #1a5640;
+  --color-accent: #e0a04a;
+  --color-accent-soft: #3d2a12;
+  --color-danger: #f07c6e;
+  --color-danger-soft: #471d18;
+  --color-success: #4cc08f;
+  --color-ring: #3fae8a;
+  --shadow-card:
+    0 1px 2px rgb(0 0 0 / 0.5),
+    0 1px 1px rgb(0 0 0 / 0.35);
+  --shadow-raised: 0 4px 14px rgb(0 0 0 / 0.55);
+}
+
+@keyframes zup-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-primary);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
