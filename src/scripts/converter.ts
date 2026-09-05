@@ -1,9 +1,25 @@
+import type { ExtractResult, FileFormatKey, TableSheet } from '../lib/core/formats';
+import { extensionToFormatKey, normalizeExtension } from '../lib/core/formats';
+import { runConversion, type PipeOutcome } from '../lib/core/pipeline';
+import { toCsv } from '../lib/core/tables';
+import { toWorkbook } from '../lib/core/xlsx';
+
 type State = 'idle' | 'reading' | 'processing' | 'preview' | 'error';
+type Path = 'native' | 'ocr';
+
+interface LimitDecision {
+  allowed: boolean;
+  used: number;
+  limit: number;
+  remaining: number;
+}
 
 interface ConverterElements {
   root: HTMLElement;
   panes: Record<State, HTMLElement>;
   fileName: HTMLElement;
+  fileSize: HTMLElement;
+  readingNote: HTMLElement;
   processTitle: HTMLElement;
   processSub: HTMLElement;
   progressLabel: HTMLElement;
@@ -12,6 +28,8 @@ interface ConverterElements {
   previewRows: HTMLElement;
   previewHint: HTMLElement;
   resultMeta: HTMLElement;
+  extractSheet: HTMLElement;
+  extractRows: HTMLElement;
   errorTitle: HTMLElement;
   errorMessage: HTMLElement;
   dropzone: HTMLElement;
@@ -19,42 +37,31 @@ interface ConverterElements {
   formatButtons: HTMLElement[];
   downloadXlsx: HTMLElement;
   downloadCsv: HTMLElement;
+  limitBar: HTMLElement;
+  limitLabel: HTMLElement;
+  upgradeDialog: HTMLDialogElement;
+  upgradeClose: HTMLElement;
+  upgradePricing: HTMLElement;
 }
 
-const COLUMNS = ['Invoice', 'Date', 'Description', 'Qty', 'Rate', 'Amount'];
-
-const SAMPLE_ROWS = [
-  ['INV-1042', '2026-08-03', 'Onboarding consultation', '2', '$120.00', '$240.00'],
-  ['INV-1043', '2026-08-05', 'Licensing review', '1', '$450.00', '$450.00'],
-  ['INV-1044', '2026-08-09', 'Data cleanup', '6', '$60.00', '$360.00'],
-  ['INV-1045', '2026-08-11', 'Quarterly report', '3', '$95.00', '$285.00'],
-  ['INV-1046', '2026-08-14', 'Integration setup', '1', '$720.00', '$720.00'],
-  ['INV-1047', '2026-08-17', 'Training session', '4', '$75.00', '$300.00'],
-  ['INV-1048', '2026-08-20', 'Support retainer', '1', '$110.00', '$110.00'],
-  ['INV-1049', '2026-08-24', 'Migration services', '5', '$130.00', '$650.00'],
-  ['INV-1050', '2026-08-26', 'Compliance check', '2', '$240.00', '$480.00'],
-  ['INV-1051', '2026-08-28', 'Document digitisation', '8', '$45.00', '$360.00'],
-  ['INV-1052', '2026-08-31', 'Consulting day', '1', '$850.00', '$850.00'],
-  ['INV-1053', '2026-09-02', 'Server hardening', '3', '$180.00', '$540.00'],
-] as const;
-
 const MAX_FILE_BYTES = 100 * 1024 * 1024;
+const PREVIEW_ROWS = 12;
 
-function isScannedFileName(name: string): boolean {
-  return /scan|scann|img|imag|photo|ocr/i.test(name);
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
 class Converter {
   private el: ConverterElements;
-  private format: 'xlsx' | 'csv' = 'xlsx';
   private file: File | null = null;
-  private path: 'native' | 'scanned' = 'native';
+  private formatKey: FileFormatKey | null = null;
+  private path: Path = 'native';
   private forcedOcr = false;
+  private result: ExtractResult | null = null;
   private timer: number | undefined;
 
   constructor(root: HTMLElement) {
     const q = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel)!;
-
     this.el = {
       root,
       panes: {
@@ -65,6 +72,8 @@ class Converter {
         error: q('[data-pane="error"]'),
       },
       fileName: q('[data-file-name]'),
+      fileSize: q('[data-file-size]'),
+      readingNote: q('[data-reading-note]'),
       processTitle: q('[data-process-title]'),
       processSub: q('[data-process-sub]'),
       progressLabel: q('[data-progress-label]'),
@@ -73,6 +82,8 @@ class Converter {
       previewRows: q('[data-preview-rows]'),
       previewHint: q('[data-preview-hint]'),
       resultMeta: q('[data-result-meta]'),
+      extractSheet: q('[data-extract-sheet]'),
+      extractRows: q('[data-extract-rows]'),
       errorTitle: q('[data-error-title]'),
       errorMessage: q('[data-error-message]'),
       dropzone: q('[data-dropzone]'),
@@ -80,11 +91,17 @@ class Converter {
       formatButtons: Array.from(root.querySelectorAll<HTMLElement>('[data-format]')),
       downloadXlsx: q('[data-download-xlsx]'),
       downloadCsv: q('[data-download-csv]'),
+      limitBar: q('[data-limit-bar]'),
+      limitLabel: q('[data-limit-label]'),
+      upgradeDialog: q('[data-upgrade-modal]'),
+      upgradeClose: q('[data-upgrade-close]'),
+      upgradePricing: q('[data-upgrade-pricing]'),
     };
 
     this.readParams();
     this.bind();
     this.setState('idle');
+    void this.refreshQuota();
   }
 
   private readParams(): void {
@@ -99,7 +116,8 @@ class Converter {
 
     el.dropzone.addEventListener('click', () => el.fileInput.click());
     el.fileInput.addEventListener('change', () => {
-      if (el.fileInput.files?.[0]) this.handleFile(el.fileInput.files[0]);
+      const file = el.fileInput.files?.[0];
+      if (file) void this.handleFile(file);
     });
 
     for (const btn of el.formatButtons) {
@@ -120,17 +138,22 @@ class Converter {
     }
     el.dropzone.addEventListener('drop', (e) => {
       const file = (e as DragEvent).dataTransfer?.files?.[0];
-      if (file) this.handleFile(file);
+      if (file) void this.handleFile(file);
     });
 
     for (const reset of rootResolver()) reset.addEventListener('click', () => this.reset());
 
     el.downloadCsv.addEventListener('click', () => this.export('csv'));
     el.downloadXlsx.addEventListener('click', () => this.export('xlsx'));
+
+    el.upgradeClose.addEventListener('click', () => el.upgradeDialog.close());
+    el.upgradeDialog.addEventListener('click', (e) => {
+      if (e.target === el.upgradeDialog) el.upgradeDialog.close();
+    });
+    el.upgradePricing.addEventListener('click', () => el.upgradeDialog.close());
   }
 
   private setFormat(fmt: 'xlsx' | 'csv'): void {
-    this.format = fmt;
     for (const btn of this.el.formatButtons) {
       const active = btn.dataset.format === fmt;
       btn.classList.toggle('bg-primary', active);
@@ -142,8 +165,10 @@ class Converter {
   }
 
   private reset(): void {
-    window.clearInterval(this.timer);
+    if (this.timer) window.clearInterval(this.timer);
     this.file = null;
+    this.formatKey = null;
+    this.result = null;
     this.el.fileInput.value = '';
     this.setState('idle');
   }
@@ -155,77 +180,166 @@ class Converter {
     }
   }
 
-  private handleFile(file: File): void {
-    if (!isPdf(file)) {
-      this.showError('Not a PDF', 'Please choose a file with the .pdf extension.');
+  private setPath(path: Path): void {
+    this.path = path;
+    this.el.root.dataset.path = path;
+  }
+
+  private refreshQuota(): void {
+    fetch('/api/limit', { method: 'GET', headers: { accept: 'application/json' } })
+      .then((r) => r.json() as Promise<LimitDecision>)
+      .then((d) => this.renderQuota(d))
+      .catch(() => undefined);
+  }
+
+  private renderQuota(d: LimitDecision): void {
+    const pct = Math.round((d.used / d.limit) * 100);
+    this.el.limitBar.style.width = `${pct}%`;
+    this.el.limitLabel.textContent = `${d.remaining} of ${d.limit} conversions left today`;
+  }
+
+  private async handleFile(file: File): Promise<void> {
+    const key = extensionToFormatKey(normalizeExtension(file.name), this.forcedOcr);
+    if (!key) {
+      this.showError(
+        'Unsupported file',
+        'We convert PDF, DOCX, DOC, PPTX, PPT, JPG and PNG. That file type is not included — pick one of those instead.',
+      );
       return;
     }
     if (file.size > MAX_FILE_BYTES) {
       this.showError(
         'File too large',
-        `This PDF is ${formatBytes(file.size)}, over our 100 MB guardrail for the demo. Native parsing has no such limit in production.`,
+        `This file is ${formatBytes(file.size)}, over our 100 MB guardrail.`,
       );
       return;
     }
     this.file = file;
-    this.path = this.forcedOcr || isScannedFileName(file.name) ? 'scanned' : 'native';
-    this.run();
+    this.formatKey = key;
+
+    let decision: LimitDecision;
+    try {
+      decision = await fetch('/api/limit', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', accept: 'application/json' },
+        body: JSON.stringify({ id: 'browser-conversion' }),
+      }).then((r) => r.json() as Promise<LimitDecision>);
+    } catch {
+      this.showError(
+        'Allowance check failed',
+        'We could not confirm your daily allowance. Check your connection and try again.',
+      );
+      return;
+    }
+    if (!decision.allowed) {
+      this.renderQuota(decision);
+      if (!this.el.upgradeDialog.open) this.el.upgradeDialog.showModal();
+      return;
+    }
+    this.renderQuota(decision);
+
+    if (key === 'png' || key === 'jpg' || key === 'doc' || key === 'ppt') {
+      this.setPath('ocr');
+    } else if (key === 'docx' || key === 'pptx') {
+      this.setPath('native');
+    } else {
+      this.setPath(this.forcedOcr ? 'ocr' : 'native');
+    }
+    await this.run();
   }
 
-  private run(): void {
+  private async run(): Promise<void> {
     const el = this.el;
-    el.fileName.textContent = this.file!.name;
-    this.setState('reading');
+    const f = this.file!;
+    el.fileName.textContent = f.name;
+    el.fileSize.textContent = formatBytes(f.size);
 
-    window.setTimeout(() => {
-      this.renderProcessing();
-      this.setState('processing');
-    }, 700);
+    const isOcr = this.path === 'ocr';
+    el.readingNote.textContent = isOcr
+      ? 'Sending to the recognition endpoint — the image is deleted right after.'
+      : 'Opening in your browser — nothing has been uploaded.';
+
+    this.setState('reading');
+    await delay(650);
+
+    this.renderProcessing();
+    this.setState('processing');
+
+    const outcome = await Promise.all([this.convert(), delay(1000)]).then(([o]) => o);
+
+    if (this.timer) window.clearInterval(this.timer);
+    el.progressLabel.textContent = 'Done';
+
+    if (outcome.kind === 'error') {
+      this.showErrorCode(outcome.code, outcome.message);
+      return;
+    }
+    this.renderPreview(outcome);
+    this.setState('preview');
   }
 
   private renderProcessing(): void {
     const el = this.el;
-    const scanned = this.path === 'scanned';
+    const scanned = this.path === 'ocr';
 
+    this.renderPathTag(scanned);
+
+    el.processTitle.textContent = scanned
+      ? 'Recognizing text in your scanned pages'
+      : 'Extracting tables from your document';
+    el.processSub.textContent = scanned
+      ? 'The image is sent to a dedicated recognition endpoint and deleted immediately afterwards.'
+      : 'Columns and text are parsed locally. Your file never leaves this device.';
+
+    const total = scanned ? 8 + ((this.file?.size ?? 0) % 14) : 8;
+    let step = 1;
+    if (this.timer) window.clearInterval(this.timer);
+    this.timer = window.setInterval(() => {
+      step += 1 + Math.floor(Math.random() * 4);
+      const capped = Math.min(step, total);
+      el.progressLabel.textContent = `${capped * 10}%`;
+    }, 160);
+  }
+
+  private renderPathTag(scanned: boolean): void {
+    const el = this.el;
     el.pathTag.className =
       'inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[0.7rem] font-medium uppercase tracking-[0.08em] ' +
       (scanned ? 'bg-accent-soft text-accent' : 'bg-primary-soft text-primary');
-    el.pathTag.textContent = scanned ? 'Scanned · OCR' : 'Native · in browser';
-
-    if (scanned) {
-      el.processTitle.textContent = 'Reading your scanned pages';
-      el.processSub.textContent =
-        'Pages are tiled to the dedicated OCR endpoint and deleted immediately after recognition.';
-    } else {
-      el.processTitle.textContent = 'Parsing tables in your browser';
-      el.processSub.textContent =
-        'Text, columns, and alignment are extracted locally. Your document never leaves this device.';
-    }
-
-    const total = scanned ? 8 + (this.file!.size % 14) : 100;
-    let step = 1;
-    window.clearInterval(this.timer);
-    this.timer = window.setInterval(() => {
-      step += 1 + Math.floor(Math.random() * 4);
-      if (step >= total) {
-        window.clearInterval(this.timer);
-        this.renderPreview();
-        this.setState('preview');
-        return;
-      }
-      el.progressLabel.textContent = scanned
-        ? `OCR · page ${Math.min(step, total)} of ${total}`
-        : `Parsing · ${Math.min(step, total)}%`;
-    }, 180);
+    el.pathTag.textContent = scanned ? 'OCR · server-side' : 'Native · in browser';
   }
 
-  private renderPreview(): void {
+  private async convert(): Promise<PipeOutcome> {
+    const file = this.file!;
+    const key = this.formatKey!;
+
+    if (key === 'pdf-native' && !this.forcedOcr) {
+      const first = await runConversion(file, 'pdf-native');
+      if (first.kind === 'error' && first.code === 'no-text') {
+        this.setPath('ocr');
+        return runConversion(file, 'pdf-scanned');
+      }
+      return first;
+    }
+    return runConversion(file, key);
+  }
+
+  private sheetForPreview(result: ExtractResult): TableSheet {
+    return result.sheets.find((s) => s.rows.length > 0) ?? result.sheets[0];
+  }
+
+  private renderPreview(outcome: ExtractResult & { kind: 'native' | 'ocr' }): void {
+    this.result = outcome;
     const el = this.el;
-    const rowCount = 6 + (this.file!.size % 10);
-    const rows = Array.from({ length: rowCount }, (_, i) => [...SAMPLE_ROWS[i % SAMPLE_ROWS.length]]);
+    const sheet = this.sheetForPreview(outcome);
+    const rows = sheet.rows;
+    const header = rows[0]?.cells.map((c) => c.text) ?? [];
+    const bodyRows = rows.slice(1, 1 + PREVIEW_ROWS);
+
+    this.renderPathTag(this.path === 'ocr');
 
     el.previewHead.innerHTML = '';
-    for (const col of COLUMNS) {
+    for (const col of header) {
       const th = document.createElement('th');
       th.scope = 'col';
       th.textContent = col;
@@ -235,24 +349,46 @@ class Converter {
     }
 
     el.previewRows.innerHTML = '';
-    rows.forEach((row, i) => {
+    bodyRows.forEach((row, i) => {
       const tr = document.createElement('tr');
       tr.className = i % 2 ? 'bg-paper/50' : '';
-      row.forEach((cell, j) => {
+      const cellCount = header.length || row.cells.length;
+      for (let j = 0; j < cellCount; j++) {
         const td = document.createElement('td');
-        td.textContent = cell;
-        td.className = 'border-b border-border/60 px-3 py-2 whitespace-nowrap ' + (j === 2 ? 'text-ink-soft' : '');
+        td.textContent = row.cells[j]?.text ?? '';
+        td.className = 'border-b border-border/60 px-3 py-2 whitespace-nowrap';
         tr.appendChild(td);
-      });
+      }
       el.previewRows.appendChild(tr);
     });
 
-    const base = this.file!.name.replace(/\.pdf$/i, '');
-    el.resultMeta.textContent = `${base} · Sheet1 · ${rowCount + 1} rows · ${this.path === 'scanned' ? 'OCR extraction' : 'native parse'}`;
-    el.previewHint.textContent =
-      this.path === 'scanned'
-        ? '— first rows; the full scanned sheet lands in your download.'
-        : '— native extraction, rows are representative.';
+    el.extractSheet.textContent = sheet.name;
+    el.extractRows.textContent = String(rows.length);
+    const base = this.file!.name.replace(normalizeExtension(this.file!.name), '');
+    const kindLabel = this.path === 'ocr' ? 'OCR recognition' : 'native parse';
+    const conf = this.path === 'ocr' ? ` · ${outcome.confidence}% confidence` : '';
+    el.resultMeta.textContent = `${base} · ${sheet.name} · ${rows.length} rows · ${kindLabel}${conf}`;
+    el.previewHint.textContent = rows.length > PREVIEW_ROWS
+      ? `— first ${PREVIEW_ROWS} rows shown; the full extraction lands in your download.`
+      : '— all extracted rows shown, ready to download.';
+  }
+
+  private showErrorCode(code: string, message: string): void {
+    const map: Record<string, [string, string]> = {
+      unsupported: [
+        'Unsupported file',
+        'We convert PDF, DOCX, DOC, PPTX, PPT, JPG and PNG. That file type is not included.',
+      ],
+      'no-text': ['No extractable text', message],
+      'bad-container': ['Could not open the file', message],
+      'ocr-failed': ['Recognition failed', message],
+    };
+    const entry = map[code];
+    if (entry) {
+      this.showError(entry[0], entry[1]);
+    } else {
+      this.showError('Conversion failed', message || 'Something went wrong while converting this file.');
+    }
   }
 
   private showError(title: string, message: string): void {
@@ -262,28 +398,36 @@ class Converter {
   }
 
   private export(kind: 'xlsx' | 'csv'): void {
-    if (!this.file) return;
+    if (!this.file || !this.result) return;
     this.setFormat(kind);
-    const rows = Array.from({ length: 14 }, (_, i) => [...SAMPLE_ROWS[i % SAMPLE_ROWS.length]]);
-    const csv = [COLUMNS, ...rows]
-      .map((row) => row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(','))
-      .join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    const base = this.file.name.replace(/\.pdf$/i, '');
-    const ext = this.format;
-    const a = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    a.href = url;
-    a.download = `${base}.${ext}`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    const sheets = this.result.sheets.filter((s) => s.rows.length > 0);
+    if (sheets.length === 0) return;
+
+    let blob: Blob;
+    if (kind === 'xlsx') {
+      const bytes = toWorkbook(sheets);
+      const part = bytes.slice(0);
+      blob = new Blob([part], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+    } else {
+      blob = new Blob([toCsv(sheets[0].rows)], { type: 'text/csv;charset=utf-8' });
+    }
+
+    const base = this.file.name.replace(normalizeExtension(this.file.name), '');
+    triggerDownload(blob, `${base}.${kind}`);
   }
 }
 
-function isPdf(file: File): boolean {
-  return file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+function triggerDownload(blob: Blob, fileName: string): void {
+  const a = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 function formatBytes(bytes: number): string {

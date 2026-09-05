@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LegalBody from '../../components/LegalBody.astro';
+import { getLoc } from '../../i18n';
+
+export function getStaticPaths() {
+  return ['es', 'ja', 'fr', 'de', 'pt', 'ko', 'it'].map((code) => ({
+    params: { locale: code },
+    props: { t: getLoc(code) },
+  }));
+}
+
+const { t } = Astro.props;
+---
+
+<BaseLayout title={t.terms.metaTitle} description={t.terms.metaDesc} path="/terms" t={t}>
+  <LegalBody data={t.terms} />
+</BaseLayout>

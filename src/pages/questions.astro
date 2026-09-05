@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { faqs } from '../data/site';
+import SectionHeading from '../components/SectionHeading.astro';
+import Icon from '../components/Icon.astro';
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout
+  title="Questions & Answers — ZeroUploadPDF"
+  description="Every question about ZeroUploadPDF, answered plainly: what zero upload means, how the free 10-conversions-a-day allowance works, OCR, file formats, file size, and privacy."
+  path="/questions"
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+
+  <section class="border-b border-border bg-paper">
+    <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+      <SectionHeading
+        eyebrow="Questions & answers"
+        title={[{ text: 'Everything, ' }, { text: 'answered plainly.', accent: true }]}
+        lede="The same honest answers that already run on the homepage, together on one page — with the full privacy and allowance details spelled out."
+      />
+
+      <div class="mt-10 border-t border-border">
+        {faqs.map((item, i) => (
+          <details class="group border-b border-border" open={i < 3}>
+            <summary
+              class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 transition-colors hover:text-primary [&::-webkit-details-marker]:hidden"
+            >
+              <h2 class="font-display text-base font-semibold text-ink group-hover:text-primary sm:text-lg">
+                {item.q}
+              </h2>
+              <span
+                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-strong text-ink transition-transform group-open:rotate-180"
+                aria-hidden="true"
+              >
+                <Icon name="chevron-down" class="h-4 w-4" />
+              </span>
+            </summary>
+            <div class="pb-6 pr-10">
+              <p class="text-[0.9375rem] leading-relaxed text-muted">{item.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+
+      <p class="mt-10 text-[0.9375rem] text-muted">
+        Something still unclear? The
+        <a href="/privacy" class="font-medium text-primary underline underline-offset-4 hover:text-primary-strong">privacy policy</a>
+        goes into the technical depth, and
+        <a href="/pricing" class="font-medium text-primary underline underline-offset-4 hover:text-primary-strong">pricing</a>
+        spells out the free and Pro allowances side by side.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

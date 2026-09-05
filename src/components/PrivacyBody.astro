@@ -1,0 +1,161 @@
+---
+import PageIntro from './PageIntro.astro';
+import Icon from './Icon.astro';
+
+export interface PrivacyStep {
+  t: string;
+  b: string;
+}
+
+export interface PrivacyData {
+  intro: { eyebrow: string; title: string; lede: string };
+  nativeH: string;
+  nativeLead: string;
+  nativeSteps: PrivacyStep[];
+  scannedH: string;
+  scannedLead: string;
+  scannedSteps: PrivacyStep[];
+  scannedNote: string;
+  neverH: string;
+  never: string[];
+  collectH: string;
+  collect: string[];
+  rightsH: string;
+  rights: string[];
+  ctaH: string;
+  cta: string;
+}
+
+interface Props {
+  data: PrivacyData;
+  base?: string;
+}
+
+const { data, base = '' } = Astro.props;
+---
+
+<PageIntro
+  eyebrow={data.intro.eyebrow}
+  title={data.intro.title}
+  lede={data.intro.lede}
+/>
+
+<section class="border-b border-border bg-paper">
+  <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <h2 class="font-display text-[clamp(1.75rem,3.5vw,2.25rem)] font-semibold leading-[1.15] tracking-[-0.015em] text-ink">
+      {data.nativeH}
+    </h2>
+    <p class="mt-4 text-[1.0625rem] leading-relaxed text-muted">
+      {data.nativeLead}
+    </p>
+
+    <ol class="mt-8 space-y-0 overflow-hidden rounded-lg border border-border bg-surface shadow-card">
+      {data.nativeSteps.map((step, i) => (
+        <li class="relative flex gap-5 border-b border-border bg-surface p-5 last:border-b-0">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-strong bg-paper font-mono text-[0.7rem] font-medium text-primary">
+            {i + 1}
+          </span>
+          <div>
+            <h3 class="font-display text-base font-semibold text-ink">{step.t}</h3>
+            <p class="mt-1 text-[0.9375rem] leading-relaxed text-muted">{step.b}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<section class="border-b border-border bg-surface">
+  <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <div class="flex items-start gap-3">
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent">
+        <Icon name="alert" class="h-4.5 w-4.5" />
+      </span>
+      <div class="flex-1">
+        <h2 class="mt-1 font-display text-[clamp(1.75rem,3.5vw,2.25rem)] font-semibold leading-[1.15] tracking-[-0.015em] text-ink">
+          {data.scannedH}
+        </h2>
+        <p class="mt-4 text-[1.0625rem] leading-relaxed text-muted">
+          {data.scannedLead}
+        </p>
+      </div>
+    </div>
+
+    <ol class="mt-8 space-y-0 overflow-hidden rounded-lg border border-border bg-surface shadow-card">
+      {data.scannedSteps.map((step, i) => (
+        <li class="relative flex gap-5 border-b border-border bg-surface p-5 last:border-b-0">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-strong bg-paper font-mono text-[0.7rem] font-medium text-accent">
+            {i + 1}
+          </span>
+          <div>
+            <h3 class="font-display text-base font-semibold text-ink">{step.t}</h3>
+            <p class="mt-1 text-[0.9375rem] leading-relaxed text-muted">{step.b}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <p class="mt-6 rounded-md border border-accent/25 bg-accent-soft/50 px-4 py-3 text-sm leading-relaxed text-ink-soft">
+      {data.scannedNote}
+    </p>
+  </div>
+</section>
+
+<section class="border-b border-border bg-paper">
+  <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <h2 class="font-display text-[clamp(1.75rem,3.5vw,2.25rem)] font-semibold leading-[1.15] tracking-[-0.015em] text-ink">
+      {data.neverH}
+    </h2>
+    <ul class="mt-8 space-y-4">
+      {data.never.map((item) => (
+        <li class="flex items-start gap-3 rounded-md border border-border bg-surface px-4 py-3.5">
+          <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary">
+            <Icon name="check" class="h-3 w-3" />
+          </span>
+          <p class="text-[0.9375rem] leading-relaxed text-ink-soft">{item}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<section class="border-b border-border bg-surface">
+  <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <h2 class="font-display text-[clamp(1.75rem,3.5vw,2.25rem)] font-semibold leading-[1.15] tracking-[-0.015em] text-ink">
+      {data.collectH}
+    </h2>
+    <div class="mt-8 space-y-5 text-[0.9375rem] leading-relaxed text-ink-soft">
+      {data.collect.map((p) => (
+        <p>{p}</p>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="border-b border-border bg-paper">
+  <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <h2 class="font-display text-[clamp(1.75rem,3.5vw,2.25rem)] font-semibold leading-[1.15] tracking-[-0.015em] text-ink">
+      {data.rightsH}
+    </h2>
+    <div class="mt-8 space-y-5 text-[0.9375rem] leading-relaxed text-ink-soft">
+      {data.rights.map((p) => (
+        <p>{p}</p>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="bg-ink">
+  <div class="mx-auto flex w-full max-w-6xl flex-col items-center px-5 py-14 text-center sm:px-6 lg:px-8">
+    <h2 class="max-w-xl font-display text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-[1.15] text-paper">
+      {data.ctaH}
+    </h2>
+    <a
+      href={`${base}/convert`}
+      class="mt-6 inline-flex h-12 items-center gap-2 rounded-md bg-primary px-7 font-mono text-sm font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-primary-strong"
+    >
+      {data.cta}
+      <Icon name="arrow-right" class="h-4 w-4" />
+    </a>
+  </div>
+</section>

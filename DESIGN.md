@@ -28,7 +28,9 @@ Tenets:
 
 ## 2. Color
 
-Semantic tokens. Values are locked; do not invent new hues. Light theme only.
+Semantic tokens. Values are locked; do not invent new hues.
+
+Light theme:
 
 | Token              | Hex       | Use                                                                  |
 | ------------------ | --------- | -------------------------------------------------------------------- |
@@ -50,6 +52,31 @@ Semantic tokens. Values are locked; do not invent new hues. Light theme only.
 | `--color-danger-soft` | `#F9E7E4` | Error callout background.                                         |
 | `--color-success`  | `#147A53`  | Success confirmations. Close to primary by design.                   |
 | `--color-ring`     | `#0E6B52`  | Focus ring color (matches primary).                                  |
+
+Dark theme — deep warm neutrals mirror paper/surface/ink; soft backgrounds reuse
+the identical hue shifts as their light halves. Applied by a `.dark` class on
+`<html>` that the boot script sets before first paint (so there is no flash):
+
+| Token              | Hex       | Use                                                                  |
+| ------------------ | --------- | -------------------------------------------------------------------- |
+| `--color-paper`    | `#171512` | Page background. Deep warm brown-black.                              |
+| `--color-surface`  | `#1F1C18` | Cards, wells, navbar, converter widget.                              |
+| `--color-ink`      | `#F2EEE7` | Primary text. Warm off-white.                                        |
+| `--color-ink-soft` | `#D8D2C6` | Secondary headings and emphasized body copy.                         |
+| `--color-muted`    | `#A8A093` | Secondary body text.                                                 |
+| `--color-faint`    | `#857C6F` | Captions, timestamps, placeholder text.                              |
+| `--color-border`   | `#332E27` | Default hairline borders.                                            |
+| `--color-border-strong` | `#4A443A` | Stronger hairlines (table separators, focus-adjacent).          |
+| `--color-primary`  | `#3FAE8A` | Data-green, brightened for dark contrast. CTAs, links, key data.     |
+| `--color-primary-strong` | `#52C19C` | Primary hover / pressed.                                       |
+| `--color-primary-soft` | `#123F30` | Primary tinted backgrounds.                                     |
+| `--color-primary-soft-strong` | `#1A5640` | Hover for primary-soft surfaces.                        |
+| `--color-accent`   | `#E0A04A`  | OCR / scanned path. Amber. Use sparingly (badges, path tags).        |
+| `--color-accent-soft` | `#3D2A12` | Amber tinted background for the scanned-path badge.              |
+| `--color-danger`   | `#F07C6E`  | Errors.                                                              |
+| `--color-danger-soft` | `#471D18` | Error callout background.                                         |
+| `--color-success`  | `#4CC08F`  | Success confirmations.                                               |
+| `--color-ring`     | `#3FAE8A`  | Focus ring color (matches primary).                                  |
 
 Rules:
 
@@ -173,8 +200,8 @@ overlays/active elements only. Prefer borders over shadows throughout.
   time" or "limited free use."
 - Technical honesty: label client-side parse vs OCR fallback precisely. Use mono
   for file names, sheet names, and cell references in copy.
-- State the free-tier OCR amount explicitly and present it as a contrast to
-  competitors that paywall OCR.
+- State the free-tier allowance explicitly (10 conversions/day across every
+  format) and present it as a contrast to competitors that paywall OCR.
 
 ## 7. Finish gate (self-check before done)
 

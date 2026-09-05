@@ -1,0 +1,105 @@
+
+ ⛅️ wrangler 4.129.0
+────────────────────
+Using redirected Wrangler configuration.
+ - Configuration being used: "dist\server\wrangler.json"
+ - Original user's configuration: "wrangler.jsonc"
+ - Deploy configuration file: ".wrangler\deploy\config.json"
+Using secrets defined in .dev.vars
+Your Worker has access to the following bindings:
+Binding                                                         Resource                  Mode
+env.SESSION                                                     KV Namespace              local
+env.ZUP_LIMITS_KV (c1c40306caa24628a4133827b057af05)            KV Namespace              local
+env.DB (zup-auth)                                               D1 Database               local
+env.ASSETS                                                      Assets                    local
+env.BETTER_AUTH_URL ("(hidden)")                                Environment Variable      local
+env.AUTH_EMAIL_PROVIDER ("(hidden)")                            Environment Variable      local
+env.AUTH_MAILBOX_URL ("(hidden)")                               Environment Variable      local
+env.ZUP_TEST_MODE ("(hidden)")                                  Environment Variable      local
+env.BETTER_AUTH_SECRET ("(hidden)")                             Environment Variable      local
+
+Attaching additional modules:
+┌───────────────────────────────────────────────────────────┬──────┬─────────────┐
+│ Name                                                      │ Type │ Size        │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/account_DCH66W2D.mjs                               │ esm  │ 0.90 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/account_Dz7JxxH6.mjs                               │ esm  │ 3.03 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/assets_Dfs-Sao4.mjs                                │ esm  │ 123.31 KiB  │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/auth_CSiU803R.mjs                                  │ esm  │ 1315.42 KiB │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/bun-sqlite-dialect-C7ftEUSI_BPm96OyY.mjs           │ esm  │ 4.56 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/d1-sqlite-dialect-D4qp4-wW_CdCXX8L6.mjs            │ esm  │ 5.07 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/default-query-compiler_BAhSJ6Ev.mjs                │ esm  │ 43.92 KiB   │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/dist_C6fZ1lCi.mjs                                  │ esm  │ 14.28 KiB   │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/entrypoints_BSXybbTy.mjs                           │ esm  │ 246.31 KiB  │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/factory_VTEzkx_e.mjs                               │ esm  │ 79.16 KiB   │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/history_DewIsudf.mjs                               │ esm  │ 1.11 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/image-passthrough-endpoint_CQyiY1W9.mjs            │ esm  │ 2.20 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/kysely-adapter_D7AAUHGR.mjs                        │ esm  │ 0.18 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/kysely-migration-tables-DFfmKhq-_C6NElt7v.mjs      │ esm  │ 0.85 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/limit_E44lQntr.mjs                                 │ esm  │ 1.47 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/node-sqlite-dialect_D4Y2g_QE.mjs                   │ esm  │ 4.56 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/noop-entrypoint_BYLrzUxc.mjs                       │ esm  │ 0.15 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/noop_DIXCHx63.mjs                                  │ esm  │ 0.66 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/ocr_DOyR_Bcw.mjs                                   │ esm  │ 5.60 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/rolldown-runtime_D7vh-g_o.mjs                      │ esm  │ 0.41 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/schemas_BIq4_VCi.mjs                               │ esm  │ 169.50 KiB  │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/service_PNKOJlw_.mjs                               │ esm  │ 66.63 KiB   │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/static-image-collection_aGyr29sI.mjs               │ esm  │ 2.45 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/_.._rBCAMnt0.mjs                                   │ esm  │ 0.55 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/_astro_assets_TowHJ0bQ.mjs                         │ esm  │ 22.60 KiB   │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/_virtual_astro_server-island-manifest_q0HM18kM.mjs │ esm  │ 0.27 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ chunks/_virtual_astro_session-driver_TyipGO2P.mjs         │ esm  │ 2.88 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ virtual_astro_middleware.mjs                              │ esm  │ 0.15 KiB    │
+├───────────────────────────────────────────────────────────┼──────┼─────────────┤
+│ Total (28 modules)                                        │      │ 2118.19 KiB │
+└───────────────────────────────────────────────────────────┴──────┴─────────────┘
+⎔ Starting local server...
+Wrangler detected this dev session is running in an AI agent.
+The Local Explorer API is available at http://127.0.0.1:8787/cdn-cgi/local/explorer/api
+Useful routes:
+  GET http://127.0.0.1:8787/cdn-cgi/local/explorer/api/local/workers - local Workers and bindings
+  GET http://127.0.0.1:8787/cdn-cgi/local/explorer/api/storage/kv/namespaces - KV namespaces
+  GET http://127.0.0.1:8787/cdn-cgi/local/explorer/api/d1/database - D1 databases
+  GET http://127.0.0.1:8787/cdn-cgi/local/explorer/api/r2/buckets - R2 buckets
+  GET http://127.0.0.1:8787/cdn-cgi/local/explorer/api/workers/durable_objects/namespaces - Durable Object namespaces
+  GET http://127.0.0.1:8787/cdn-cgi/local/explorer/api/workflows - Workflows
+  POST http://127.0.0.1:8787/cdn-cgi/local/explorer/api/local/observability/query - run a read-only SQL query (SELECT/WITH only) over captured request traces and console logs. Tables: spans, logs (read attributes via json(attributes)). Example:
+    curl -X POST http://127.0.0.1:8787/cdn-cgi/local/explorer/api/local/observability/query -H 'Content-Type: application/json' -d '{"sql":"SELECT service, name, outcome, duration_ms FROM spans WHERE parent_id IS NULL LIMIT 20"}'
+If the routes above don't cover what you need, fetch the full OpenAPI schema (large - use only as a last resort):
+  GET http://127.0.0.1:8787/cdn-cgi/local/explorer/api - OpenAPI schema
+[wrangler:info] ✨ Parsed 1 valid header rule.
+[wrangler:info] Ready on http://127.0.0.1:8787
+[wrangler:info] GET /api/auth/ok 200 OK (127ms)
+[wrangler:info] POST /api/ocr 403 Forbidden (56ms)
+[wrangler:info] GET / 200 OK (206ms)
+[wrangler:info] GET /pricing 200 OK (52ms)
+[wrangler:info] POST /api/ocr 403 Forbidden (10ms)
+
+[32mIf you think this is a bug then please create an issue at https://github.com/cloudflare/workers-sdk/issues/new/choose[0m

@@ -1,18 +1,36 @@
 ---
 import SectionHeading from './SectionHeading.astro';
 import Icon from './Icon.astro';
+import type { Loc } from '../i18n/types';
 
-const nativeSteps = [
+interface Props {
+  t?: Loc;
+}
+const { t } = Astro.props;
+const base = t?.base ?? '';
+
+const nativeSteps = t?.how.nativeSteps ?? [
   'Drop your PDF into the converter.',
   'Text and tables are extracted in-browser, using your own CPU.',
   'Preview the extracted table, then download .xlsx or .csv.',
 ];
 
-const scannedSteps = [
+const scannedSteps = t?.how.scannedSteps ?? [
   'Pages are detected as images, not text.',
   'Only the scanned pages go to our OCR service — deleted the moment recognition finishes.',
   'Recognized tables return to your tab, ready to preview and download.',
 ];
+
+const eyebrow = t?.how.eyebrow ?? 'How it works';
+const titleA = t?.how.titleA ?? 'Convert a scanned PDF to Excel';
+const titleB = t?.how.titleB ?? ' — OCR included, free daily.';
+const lede = t?.how.lede ?? 'Documents decide the route. Text-based PDFs stay on your machine; genuine scans take a short, documented trip there and back.';
+const pathAName = t?.how.pathAName ?? 'Path A · Native PDF';
+const pathBName = t?.how.pathBName ?? 'Path B · Scanned PDF';
+const nativeFooter = t?.how.nativeFooter ?? 'Nothing leaves the tab';
+const scannedFooter = t?.how.scannedFooter ?? 'In and out — the shortest possible trip';
+const bottom = t?.how.bottom ?? 'Both paths end with a table preview. You never download blind.';
+const open = t?.how.open ?? 'Open the converter →';
 ---
 
 
@@ -20,19 +38,19 @@ const scannedSteps = [
 <section id="how-it-works" class="scroll-mt-24 border-b border-border bg-surface">
   <div class="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
     <SectionHeading
-      eyebrow="How it works"
+      eyebrow={eyebrow}
       title={[
-        { text: 'Two paths, ' },
-        { text: 'one promise.' },
+        { text: titleA },
+        { text: titleB },
       ]}
-      lede="Documents decide the route. Text-based PDFs stay on your machine; genuine scans take a short, documented trip there and back."
+      lede={lede}
     />
 
     <div class="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
       <article class="overflow-hidden rounded-lg border border-border bg-paper">
         <div class="flex items-center justify-between border-b border-border bg-primary-soft/60 px-5 py-3">
           <h3 class="font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-primary">
-            Path A · Native PDF
+            {pathAName}
           </h3>
           <Icon name="cpu" class="h-4.5 w-4.5 text-primary" />
         </div>
@@ -54,7 +72,7 @@ const scannedSteps = [
         <div class="border-t border-border bg-surface px-5 py-3">
           <p class="flex items-center gap-1.5 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-primary">
             <Icon name="lock" class="h-3.5 w-3.5" />
-            Nothing leaves the tab
+            {nativeFooter}
           </p>
         </div>
       </article>
@@ -62,7 +80,7 @@ const scannedSteps = [
       <article class="overflow-hidden rounded-lg border border-border bg-paper">
         <div class="flex items-center justify-between border-b border-border bg-accent-soft/60 px-5 py-3">
           <h3 class="font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-accent">
-            Path B · Scanned PDF
+            {pathBName}
           </h3>
           <Icon name="scan" class="h-4.5 w-4.5 text-accent" />
         </div>
@@ -84,7 +102,7 @@ const scannedSteps = [
         <div class="border-t border-border bg-surface px-5 py-3">
           <p class="flex items-center gap-1.5 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-accent">
             <Icon name="refresh" class="h-3.5 w-3.5" />
-            In and out — the shortest possible trip
+            {scannedFooter}
           </p>
         </div>
       </article>
@@ -93,13 +111,13 @@ const scannedSteps = [
     <div class="mx-auto mt-8 flex max-w-4xl flex-col items-center justify-between gap-4 rounded-lg border border-border bg-paper px-6 py-5 sm:flex-row">
       <p class="flex items-center gap-2.5 text-[0.9375rem] text-ink-soft">
         <Icon name="eye" class="h-4.5 w-4.5 shrink-0 text-primary" />
-        Both paths end with a table preview. You never download blind.
+        {bottom}
       </p>
       <a
-        href="/convert"
-        class="font-mono text-[0.7rem] font-medium uppercase tracking-[0.08em] text-primary transition-colors hover:text-primary-strong"
+        href={`${base}/convert`}
+        class="-m-4 inline-block p-4 font-mono text-[0.7rem] font-medium uppercase tracking-[0.08em] text-primary transition-colors hover:text-primary-strong"
       >
-        Open the converter →
+        {open}
       </a>
     </div>
   </div>

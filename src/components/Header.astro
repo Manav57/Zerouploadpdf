@@ -1,5 +1,7 @@
 ---
 import Logo from './Logo.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import type { Loc } from '../i18n/types';
 
 interface NavItem {
   label: string;
@@ -7,11 +9,25 @@ interface NavItem {
   active?: boolean;
 }
 
+interface Props {
+  t?: Loc;
+}
+
+const { t } = Astro.props;
+const base = t?.base ?? '';
 const nav: NavItem[] = [
-  { label: 'Convert', href: '/convert' },
-  { label: 'How it works', href: '/#how-it-works' },
-  { label: 'Pricing', href: '/pricing' },
-  { label: 'Privacy', href: '/privacy' },
+  { label: t?.nav.convert ?? 'Convert', href: `${base}/convert` },
+  { label: t?.nav.how ?? 'How it works', href: `${base}/#how-it-works` },
+  { label: t?.nav.questions ?? 'Questions', href: `${base}/questions` },
+  { label: t?.nav.pricing ?? 'Pricing', href: `${base}/pricing` },
+  { label: t?.nav.privacy ?? 'Privacy', href: `${base}/privacy` },
+  { label: t?.auth?.navSignIn ?? 'Sign in', href: `${base}/signin` },
+];
+const ctaLabel = t?.nav.cta ?? 'Convert a PDF';
+
+// NEW: Auth nav item
+const authNav: NavItem[] = [
+  { label: t?.auth?.navSignIn ?? 'Sign in', href: `${base}/signin` },
 ];
 ---
 
@@ -36,11 +52,13 @@ const nav: NavItem[] = [
     </nav>
 
     <a
-      href="/convert"
+      href={`${base}/convert`}
       class="hidden h-10 items-center rounded-md bg-primary px-4 font-mono text-[0.72rem] font-medium uppercase tracking-[0.08em] text-white transition-colors hover:bg-primary-strong md:inline-flex"
     >
-      Convert a PDF
+      {ctaLabel}
     </a>
+
+    <ThemeToggle />
 
     <details class="group relative md:hidden">
       <summary
@@ -65,12 +83,15 @@ const nav: NavItem[] = [
             </a>
           ))}
         </nav>
-        <a
-          href="/convert"
-          class="mt-6 flex h-11 items-center justify-center rounded-md bg-primary px-5 font-mono text-xs font-medium uppercase tracking-[0.08em] text-white transition-colors hover:bg-primary-strong"
-        >
-          Convert a PDF
-        </a>
+        <div class="mt-6 flex items-center gap-3">
+          <a
+            href={`${base}/convert`}
+            class="flex h-11 flex-1 items-center justify-center rounded-md bg-primary px-5 font-mono text-xs font-medium uppercase tracking-[0.08em] text-white transition-colors hover:bg-primary-strong"
+          >
+            {ctaLabel}
+          </a>
+          <ThemeToggle />
+        </div>
       </div>
     </details>
   </div>

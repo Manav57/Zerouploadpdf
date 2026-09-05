@@ -1,0 +1,15 @@
+npm warn exec The following package was not found and will be installed: @better-auth/cli@1.4.21
+npm warn deprecated prebuild-install@7.1.3: No longer maintained. Please contact the author of the relevant native addon; alternatives are available.
+npm warn deprecated @better-auth/cli@1.4.21: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+2026-09-05T10:52:14.541Z WARN [Better Auth]: [better-auth] Base URL is not set. Set the baseURL option or BETTER_AUTH_URL env, or use a dynamic baseURL with allowedHosts for multi-host setups. Without it the origin is derived from the incoming request, and callbacks and redirects may not work correctly.
+Γáï preparing schema...
+file:///C:/Users/mp701/AppData/Local/npm-cache/_npx/05eee8cc65087e98/node_modules/@better-auth/cli/dist/generators-Ht8QYIi_.mjs:567
+	throw new Error(`${adapter.id} is not supported. If it is a custom adapter, please request the maintainer to implement createSchema`);
+	      ^
+
+Error: memory is not supported. If it is a custom adapter, please request the maintainer to implement createSchema
+    at generateSchema (file:///C:/Users/mp701/AppData/Local/npm-cache/_npx/05eee8cc65087e98/node_modules/@better-auth/cli/dist/generators-Ht8QYIi_.mjs:567:8)
+    at Command.generateAction (file:///C:/Users/mp701/AppData/Local/npm-cache/_npx/05eee8cc65087e98/node_modules/@better-auth/cli/dist/index.mjs:466:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.14.1

@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LegalBody from '../components/LegalBody.astro';
+---
+
+<BaseLayout
+  title="Refund Policy"
+  description="ZeroUploadPDF refunds in plain numbers: cancel anytime, a full refund of unused time within 14 days of payment, and how refunds are paid."
+  path="/refunds"
+>
+  <LegalBody
+    data={{
+      intro: {
+        eyebrow: 'Refunds',
+        title: 'Money-back terms, in plain numbers.',
+        lede: 'Selling software is easier when you state the policy up front. Here is ours. Last updated September 5, 2026.',
+      },
+      sections: [
+        {
+          h: 'How cancellation works',
+          ps: [
+            'Pro is billed monthly or yearly. You can cancel at any time and access continues until the end of the paid period.',
+            'Within 14 days of a payment, contact us for a full refund of the unused portion of that period. Refunds beyond the window are granted at our discretion, for example when a technical failure prevented your conversions.',
+          ],
+        },
+        {
+          h: 'How refunds are paid',
+          ps: [
+            'Approved refunds go back to the original payment method. Depending on the card issuer, it may take 5–10 business days to appear on your statement.',
+          ],
+        },
+        {
+          h: 'The free tier',
+          ps: [
+            'Refunds apply only to paid Pro charges. The daily free allowance is not a purchase, so there is nothing to refund there.',
+          ],
+        },
+        {
+          h: 'Disputes',
+          ps: [
+            'If you believe a charge was wrong, contact us first at hello@zerouploadpdf.com. We will resolve it directly before you escalate to your card issuer.',
+          ],
+        },
+      ],
+    }}
+  />
+</BaseLayout>

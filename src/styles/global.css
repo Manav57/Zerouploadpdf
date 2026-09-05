@@ -4,6 +4,8 @@
 @import '@fontsource/ibm-plex-mono/latin-500.css';
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Space Grotesk Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
@@ -32,6 +34,35 @@
     0 1px 2px rgb(28 25 23 / 0.05),
     0 1px 1px rgb(28 25 23 / 0.03);
   --shadow-raised: 0 4px 12px rgb(28 25 23 / 0.08);
+}
+
+/* Dark theme tokens — derived from the light palette (deep warm neutrals
+   mirror paper/surface/ink; soft backgrounds reuse the identical hue shifts
+   as their light counterparts). Applied via the `.dark` class on <html>,
+   which the boot script sets before first paint. */
+.dark {
+  --color-paper: #171512;
+  --color-surface: #1f1c18;
+  --color-ink: #f2eee7;
+  --color-ink-soft: #d8d2c6;
+  --color-muted: #a8a093;
+  --color-faint: #857c6f;
+  --color-border: #332e27;
+  --color-border-strong: #4a443a;
+  --color-primary: #3fae8a;
+  --color-primary-strong: #52c19c;
+  --color-primary-soft: #123f30;
+  --color-primary-soft-strong: #1a5640;
+  --color-accent: #e0a04a;
+  --color-accent-soft: #3d2a12;
+  --color-danger: #f07c6e;
+  --color-danger-soft: #471d18;
+  --color-success: #4cc08f;
+  --color-ring: #3fae8a;
+  --shadow-card:
+    0 1px 2px rgb(0 0 0 / 0.5),
+    0 1px 1px rgb(0 0 0 / 0.35);
+  --shadow-raised: 0 4px 14px rgb(0 0 0 / 0.55);
 }
 
 @keyframes zup-shimmer {

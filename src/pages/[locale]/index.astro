@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
+import Comparison from '../../components/Comparison.astro';
+import Trust from '../../components/Trust.astro';
+import PricingSection from '../../components/PricingSection.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getLoc } from '../../i18n';
+
+export function getStaticPaths() {
+  return ['es', 'ja', 'fr', 'de', 'pt', 'ko', 'it'].map((code) => ({
+    params: { locale: code },
+    props: { t: getLoc(code) },
+  }));
+}
+
+const { t } = Astro.props;
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: t.code,
+  mainEntity: t.faqs.map((f) => ({
+    '@type': 'Question',
+    inLanguage: t.code,
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', inLanguage: t.code, text: f.a },
+  })),
+};
+---
+
+<BaseLayout title={t.meta.title} description={t.meta.description} path="/" t={t}>
+  <Hero t={t} />
+  <HowItWorks t={t} />
+  <Comparison t={t} />
+  <Trust t={t} />
+  <PricingSection t={t} ctaHref={`${t.base}/convert`} ctaLabel={t.pricing.cta} />
+  <Faq t={t} />
+  <CtaBand t={t} />
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+</BaseLayout>

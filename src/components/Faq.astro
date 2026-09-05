@@ -1,7 +1,19 @@
 ---
-import { faqs } from '../data/site';
+import { faqs as enFaqs } from '../data/site';
 import SectionHeading from './SectionHeading.astro';
 import Icon from './Icon.astro';
+import type { Loc } from '../i18n/types';
+
+interface Props {
+  t?: Loc;
+}
+const { t } = Astro.props;
+const base = t?.base ?? '';
+const faqs = t?.faqs ?? enFaqs;
+const eyebrow = t?.faq.eyebrow ?? 'FAQ';
+const titleA = t?.faq.titleA ?? 'Asked often, ';
+const titleB = t?.faq.titleB ?? 'answered plainly.';
+const more = t?.faq.more ?? 'Read all 13 questions →';
 ---
 
 
@@ -9,10 +21,10 @@ import Icon from './Icon.astro';
 <section id="faq" class="scroll-mt-24 border-b border-border bg-surface">
   <div class="mx-auto w-full max-w-3xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
     <SectionHeading
-      eyebrow="FAQ"
+      eyebrow={eyebrow}
       title={[
-        { text: 'Asked often, ' },
-        { text: 'answered plainly.', accent: true },
+        { text: titleA },
+        { text: titleB, accent: true },
       ]}
     />
 
@@ -38,5 +50,15 @@ import Icon from './Icon.astro';
         </details>
       ))}
     </div>
+
+    <p class="mt-8 text-center text-sm text-muted">
+      {t?.faq.moreLead ?? 'More detail on every answer?'}
+      <a
+        href={`${base}/questions`}
+        class="-m-3 inline-block p-3 font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary-strong"
+      >
+        {more}
+      </a>
+    </p>
   </div>
 </section>

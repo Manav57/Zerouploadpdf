@@ -2,6 +2,22 @@
 import { comparisonRows } from '../data/site';
 import SectionHeading from './SectionHeading.astro';
 import Icon from './Icon.astro';
+import type { Loc } from '../i18n/types';
+
+interface Props {
+  t?: Loc;
+}
+const { t } = Astro.props;
+const rows = t?.comparison.rows ?? comparisonRows;
+const eyebrow = t?.comparison.eyebrow ?? 'The difference';
+const titleA = t?.comparison.titleA ?? 'Zero-upload isn\'t a feature.';
+const titleB = t?.comparison.titleB ?? ' It\'s the architecture.';
+const lede = t?.comparison.lede ?? 'The chart below compares us to a typical online PDF-to-Excel converter. The rows that matter are limits, OCR, and what happens to your file after the tab closes.';
+const colUs = t?.comparison.colUs ?? 'ZeroUploadPDF';
+const colThem = t?.comparison.colThem ?? 'Typical online converter';
+const featureCol = t?.comparison.featureCol ?? 'Comparison';
+const noteA = t?.comparison.noteA ?? 'We don\'t name any specific service here — we apply the standard that any of them would refuse:';
+const noteB = t?.comparison.noteB ?? 'state your file-handling and your limits in plain numbers.';
 ---
 
 
@@ -9,61 +25,66 @@ import Icon from './Icon.astro';
 <section id="comparison" class="scroll-mt-24 border-b border-border bg-paper">
   <div class="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
     <SectionHeading
-      eyebrow="The difference"
+      eyebrow={eyebrow}
       title={[
-        { text: 'Zero-upload isn\'t a feature.' },
-        { text: ' It\'s the architecture.', accent: true },
+        { text: titleA },
+        { text: titleB, accent: true },
       ]}
-      lede="The chart below compares us to a typical online PDF-to-Excel converter. The rows that matter are limits, OCR, and what happens to your file after the tab closes."
+      lede={lede}
     />
 
     <div class="mx-auto mt-12 max-w-4xl overflow-hidden rounded-lg border border-border bg-surface shadow-card">
-      <div class="hidden border-b border-border bg-paper md:grid md:grid-cols-[1.2fr_1fr_1fr]">
-        <div class="px-5 py-3">
-          <span class="sr-only">Feature</span>
-        </div>
-        <div class="border-l border-border px-5 py-3">
-          <p class="font-display text-sm font-semibold text-primary">ZeroUploadPDF</p>
-        </div>
-        <div class="border-l border-border px-5 py-3">
-          <p class="font-display text-sm font-semibold text-muted">Typical online converter</p>
-        </div>
-      </div>
-
-      {comparisonRows.map((row, i) => (
-        <div class:list={['md:grid md:grid-cols-[1.2fr_1fr_1fr]', { 'border-t border-border': i > 0 }]}>
-          <div class="border-b border-border px-4 py-3 md:border-b-0 md:px-5 md:py-3.5">
-            <p class="text-[0.875rem] font-medium leading-snug text-ink-soft">{row.feature}</p>
-          </div>
-          <div class="px-4 py-3 md:flex md:items-start md:gap-1.5 md:border-l md:px-5">
-            <p class="mb-0.5 font-mono text-[0.65rem] font-medium uppercase tracking-[0.06em] text-primary md:hidden">
-              ZeroUploadPDF
-            </p>
-            <p class="flex items-start gap-1.5 text-[0.875rem] leading-snug text-ink">
-              <span class="mt-0.5 hidden shrink-0 md:block" aria-hidden="true">
-                <Icon name="check" class="h-3.5 w-3.5 text-primary" />
-              </span>
-              <span>{row.us}</span>
-            </p>
-          </div>
-          <div class="border-t border-border px-4 py-3 md:flex md:items-start md:gap-1.5 md:border-l md:border-t-0 md:px-5">
-            <p class="mb-0.5 font-mono text-[0.65rem] font-medium uppercase tracking-[0.06em] text-faint md:hidden">
-              Typical online converter
-            </p>
-            <p class="flex items-start gap-1.5 text-[0.875rem] leading-snug text-faint">
-              <span class="mt-0.5 hidden shrink-0 md:block" aria-hidden="true">
-                <Icon name="x" class="h-3.5 w-3.5 text-faint" />
-              </span>
-              <span>{row.them}</span>
-            </p>
-          </div>
-        </div>
-      ))}
+      <table class="block w-full border-collapse">
+        <caption class="sr-only">{featureCol} — {colUs} vs {colThem}</caption>
+        <thead class="hidden border-b border-border bg-paper md:block">
+          <tr class="md:grid md:grid-cols-[1.2fr_1fr_1fr]">
+            <th scope="col" class="block px-5 py-3">
+              <span class="sr-only">{featureCol}</span>
+            </th>
+            <th scope="col" class="block border-l border-border px-5 py-3 text-left font-display text-sm font-semibold text-primary">
+              {colUs}
+            </th>
+            <th scope="col" class="block border-l border-border px-5 py-3 text-left font-display text-sm font-semibold text-muted">
+              {colThem}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="block">
+          {rows.map((row, i) => (
+            <tr class:list={['block md:grid md:grid-cols-[1.2fr_1fr_1fr]', i > 0 ? 'md:border-t md:border-border' : '']}>
+              <th scope="row" class="block border-b border-border px-4 py-3 text-left font-normal md:border-b-0 md:px-5 md:py-3.5">
+                <p class="text-[0.875rem] font-medium leading-snug text-ink-soft">{row.feature}</p>
+              </th>
+              <td class="block px-4 py-3 md:flex md:items-start md:gap-1.5 md:border-l md:px-5">
+                <p class="mb-0.5 font-mono text-[0.65rem] font-medium uppercase tracking-[0.06em] text-primary md:hidden">
+                  {colUs}
+                </p>
+                <p class="flex items-start gap-1.5 text-[0.875rem] leading-snug text-ink">
+                  <span class="mt-0.5 hidden shrink-0 md:block" aria-hidden="true">
+                    <Icon name="check" class="h-3.5 w-3.5 text-primary" />
+                  </span>
+                  <span>{row.us}</span>
+                </p>
+              </td>
+              <td class="block border-t border-border px-4 py-3 md:flex md:items-start md:gap-1.5 md:border-l md:border-t-0 md:px-5">
+                <p class="mb-0.5 font-mono text-[0.65rem] font-medium uppercase tracking-[0.06em] text-faint md:hidden">
+                  {colThem}
+                </p>
+                <p class="flex items-start gap-1.5 text-[0.875rem] leading-snug text-faint">
+                  <span class="mt-0.5 hidden shrink-0 md:block" aria-hidden="true">
+                    <Icon name="x" class="h-3.5 w-3.5 text-faint" />
+                  </span>
+                  <span>{row.them}</span>
+                </p>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
 
     <p class="mx-auto mt-6 max-w-4xl text-center text-sm text-muted">
-      We don't name any specific service here — we apply the standard that any of
-      them would refuse: <span class="font-medium text-ink">state your file-handling and your limits in plain numbers.</span>
+      {noteA} <span class="font-medium text-ink">{noteB}</span>
     </p>
   </div>
 </section>

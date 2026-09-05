@@ -1,0 +1,18 @@
+
+ Γ¢à∩╕Å wrangler 4.129.0
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+Γ£à Successfully created DB 'zup-auth' in region APAC
+Created your new D1 database.
+
+To access your new D1 Database in your Worker, add the following snippet to your configuration file:
+{
+  "d1_databases": [
+    {
+      "binding": "zup_auth",
+      "database_name": "zup-auth",
+      "database_id": "f2bf3497-14d1-478b-9af7-cad6015044df"
+    }
+  ]
+}
+? Would you like Wrangler to add it on your behalf?
+≡ƒñû Using fallback value in non-interactive context: no

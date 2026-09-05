@@ -1,29 +1,30 @@
 ---
 import SectionHeading from './SectionHeading.astro';
 import Icon from './Icon.astro';
+import type { Loc } from '../i18n/types';
 
-const points = [
-  {
-    icon: 'cpu',
-    title: 'Parsed on your device',
-    body: 'Text-based PDFs are read and analyzed in your browser, using your CPU. The bytes never travel.',
-  },
-  {
-    icon: 'lock',
-    title: 'Nothing stored',
-    body: 'No account, no history, no server copy. When the tab closes, the file is gone with it.',
-  },
-  {
-    icon: 'refresh',
-    title: 'OCR deletes itself',
-    body: 'Scanned pages go to the OCR service, get recognized, and are deleted on completion. No archive.',
-  },
-  {
-    icon: 'check',
-    title: 'No signup trap',
-    body: 'A single conversion always works without an account. Signing up is optional, for higher limits.',
-  },
-];
+interface Props {
+  t?: Loc;
+}
+const { t } = Astro.props;
+
+const cards = t?.trust.cards;
+const icons = ['cpu', 'lock', 'refresh', 'check'] as const;
+const points = cards
+  ? cards.map((card, i) => ({ ...card, icon: icons[i % icons.length] }))
+  : [
+      { icon: 'cpu', title: 'Parsed on your device', body: 'Text-based PDFs are read and analyzed in your browser, using your CPU. The bytes never travel.' },
+      { icon: 'lock', title: 'Nothing stored', body: 'No account, no history, no server copy. When the tab closes, the file is gone with it.' },
+      { icon: 'refresh', title: 'OCR deletes itself', body: 'Scanned pages go to the OCR service, get recognized, and are deleted on completion. No archive.' },
+      { icon: 'check', title: 'No signup trap', body: 'A single conversion always works without an account. Signing up is optional, for higher limits.' },
+    ];
+
+const eyebrow = t?.trust.eyebrow ?? 'Security & trust';
+const titleA = t?.trust.titleA ?? 'Not an upload-vs-delete story.';
+const titleB = t?.trust.titleB ?? ' A no-upload story.';
+const lede = t?.trust.lede ?? 'Other tools trumpet that they delete your file after an hour. We\'d rather not have it at all.';
+const calloutTitle = t?.trust.calloutTitle ?? 'The distinction matters.';
+const callout = t?.trust.callout ?? '"Deleted after one hour" means the file was on a server at all. Ours never is — native PDFs don\'t leave the browser, and scanned pages exist on the OCR service for the seconds it takes to read them, nothing more.';
 ---
 
 
@@ -31,12 +32,12 @@ const points = [
 <section id="trust" class="scroll-mt-24 border-b border-border bg-surface">
   <div class="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
     <SectionHeading
-      eyebrow="Security & trust"
+      eyebrow={eyebrow}
       title={[
-        { text: 'Not an upload-vs-delete story.' },
-        { text: ' A no-upload story.', accent: true },
+        { text: titleA },
+        { text: titleB, accent: true },
       ]}
-      lede="Other tools trumpet that they delete your file after an hour. We'd rather not have it at all."
+      lede={lede}
     />
 
     <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -53,10 +54,7 @@ const points = [
 
     <div class="mx-auto mt-8 max-w-4xl rounded-lg border border-primary/20 bg-primary-soft/50 px-6 py-5">
       <p class="text-[0.9375rem] leading-relaxed text-ink-soft">
-        <strong class="font-medium text-ink">The distinction matters.</strong> "Deleted after one hour"
-        means the file was on a server at all. Ours never is — native PDFs don't
-        leave the browser, and scanned pages exist on the OCR service for the
-        seconds it takes to read them, nothing more.
+        <strong class="font-medium text-ink">{calloutTitle}</strong> {callout}
       </p>
     </div>
   </div>

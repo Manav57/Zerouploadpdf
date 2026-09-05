@@ -1,33 +1,48 @@
 ---
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
+import type { Loc } from '../i18n/types';
+
+interface Props {
+  t?: Loc;
+}
+
+const { t } = Astro.props;
+const base = t?.base ?? '';
 
 const linkGroups = [
   {
-    heading: 'Convert',
+    heading: t?.footer.convertHeading ?? 'Convert',
     links: [
-      { label: 'PDF to Excel', href: '/convert', target: undefined },
-      { label: 'PDF to CSV', href: '/convert?format=csv', target: undefined },
-      { label: 'Scanned PDFs (OCR)', href: '/convert?ocr=1', target: undefined },
+      { label: t?.footer.links.pdfExcel ?? 'PDF to Excel', href: `${base}/convert` },
+      { label: t?.footer.links.pdfCsv ?? 'PDF to CSV', href: `${base}/convert?format=csv` },
+      { label: t?.footer.links.scannedOcr ?? 'Scanned PDFs (OCR)', href: `${base}/convert?ocr=1` },
     ],
   },
   {
-    heading: 'Product',
+    heading: t?.footer.productHeading ?? 'Product',
     links: [
-      { label: 'How it works', href: '/#how-it-works' },
-      { label: 'Pricing', href: '/pricing' },
-      { label: 'Privacy & zero-upload', href: '/privacy' },
+      { label: t?.footer.links.how ?? 'How it works', href: `${base}/#how-it-works` },
+      { label: t?.footer.links.pricing ?? 'Pricing', href: `${base}/pricing` },
+      { label: t?.footer.links.questions ?? 'Questions & answers', href: `${base}/questions` },
+      { label: t?.footer.links.privacy ?? 'Privacy & zero-upload', href: `${base}/privacy` },
     ],
   },
   {
-    heading: 'Company',
+    heading: t?.footer.companyHeading ?? 'Company',
     links: [
-      { label: 'Export limits', href: '/pricing#limits' },
-      { label: 'FAQ', href: '/#faq' },
-      { label: 'Start converting', href: '/convert' },
+      { label: t?.footer.links.terms ?? 'Terms of service', href: `${base}/terms` },
+      { label: t?.footer.links.refunds ?? 'Refund policy', href: `${base}/refunds` },
+      { label: t?.footer.links.contact ?? 'Contact', href: 'mailto:hello@zerouploadpdf.com' },
     ],
   },
 ];
+
+const blurb =
+  t?.footer.blurb ??
+  'PDF to Excel and CSV, converted where it counts — on your device. Native\n          PDFs never leave your browser; only genuine scans reach our OCR service.';
+const footerTagline =
+  t?.footer.footerTagline ?? 'No uploads. No accounts. No server copies of your data.';
 
 const year = new Date().getFullYear();
 ---
@@ -38,8 +53,7 @@ const year = new Date().getFullYear();
       <div class="max-w-sm">
         <Logo />
         <p class="mt-4 text-sm leading-relaxed text-muted">
-          PDF to Excel and CSV, converted where it counts — on your device. Native
-          PDFs never leave your browser; only genuine scans reach our OCR service.
+          {blurb}
         </p>
         <p class="mt-4 inline-flex items-center gap-1.5 font-mono text-[0.72rem] uppercase tracking-[0.08em] text-primary">
           <Icon name="lock" class="h-3.5 w-3.5" />
@@ -72,7 +86,7 @@ const year = new Date().getFullYear();
       class="mt-12 flex flex-col gap-3 border-t border-border pt-6 text-xs text-faint sm:flex-row sm:items-center sm:justify-between"
     >
       <p>© {year} ZeroUploadPDF. All rights reserved.</p>
-      <p class="font-mono uppercase tracking-[0.08em]">No uploads. No accounts. No server copies of your data.</p>
+      <p class="font-mono uppercase tracking-[0.08em]">{footerTagline}</p>
     </div>
   </div>
 </footer>

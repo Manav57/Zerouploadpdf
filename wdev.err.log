@@ -1,0 +1,7 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1m2026-09-05T16:35:15.541Z WARN [Better Auth]: Rate limiting could not determine a client IP and is falling back to a single shared per-path bucket. Ensure your runtime forwards a trusted client IP header, then set `advanced.ipAddress.ipAddressHeaders` or `advanced.ipAddress.trustedProxies` so the address can be resolved.[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1m[0m
+
+
+🪵  Logs were written to "C:\Users\mp701\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-09-05_16-35-02_066.log"

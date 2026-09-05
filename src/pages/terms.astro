@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LegalBody from '../components/LegalBody.astro';
+---
+
+<BaseLayout
+  title="Terms of Service"
+  description="The terms for using ZeroUploadPDF: how the converter works, how your files are handled, and the limits of the free tier and Pro."
+  path="/terms"
+>
+  <LegalBody
+    data={{
+      intro: {
+        eyebrow: 'Terms',
+        title: 'The rules we run on.',
+        lede: 'Short page, plain language. Last updated September 5, 2026.',
+      },
+      sections: [
+        {
+          h: '1. The service',
+          ps: [
+            'ZeroUploadPDF converts PDF, Word, PowerPoint and image files into Excel (.xlsx) or CSV (.csv). Native text documents are processed in your browser; scanned files use an OCR service that recognizes the text and deletes the images immediately afterwards.',
+            'The free tier includes 10 conversions per day across every format. Pro removes the daily cap and adds batch processing and higher page ceilings.',
+          ],
+        },
+        {
+          h: '2. Your files',
+          ps: [
+            'Native PDFs are parsed on your device and never leave it. Only the scanned pages that genuinely require OCR travel to our recognition service, where they are processed, deleted, and never stored, archived, or used for training.',
+            'When the browser tab closes, the in-memory data of a conversion is gone. You are responsible for keeping your own copies of the documents you convert.',
+          ],
+        },
+        {
+          h: '3. Accounts and payment',
+          ps: [
+            'A single conversion never requires an account. Pro subscriptions are purchased at checkout, billed by Stripe monthly or yearly, and can be cancelled at any time. Your documents are never linked to your payment history.',
+            'You agree to provide accurate payment information and to only use payment methods you are authorized to use.',
+          ],
+        },
+        {
+          h: '4. Acceptable use',
+          ps: [
+            'Only upload documents you are entitled to access and convert. Do not use the service for unlawful purposes, to bypass the published quotas with scripts or bots, or to disrupt the service for other users.',
+          ],
+        },
+        {
+          h: '5. Availability and liability',
+          ps: [
+            'The service is provided "as is", without warranties of any kind. Conversion quality depends on your document and browser, and automated extraction can miss or misread content — verify important spreadsheets before relying on them.',
+            'To the maximum extent permitted by law, ZeroUploadPDF is not liable for indirect or consequential losses, including lost data or profits, arising from use of the service. Nothing the service produces is professional, legal, or financial advice.',
+          ],
+        },
+        {
+          h: '6. Changes to these terms',
+          ps: [
+            'We may update these terms from time to time. Changes take effect when published on this page, and continuing to use the service means you accept them. We may limit, suspend, or end access for abusive use, at our discretion.',
+          ],
+        },
+        {
+          h: '7. Contact',
+          ps: [
+            'Questions about these terms? Email hello@zerouploadpdf.com and we will reply within a few business days.',
+          ],
+        },
+      ],
+    }}
+  />
+</BaseLayout>

@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import type { Loc } from '../i18n/types';
+import { localeCodes } from '../i18n';
 
 interface Props {
   title: string;
@@ -9,19 +11,46 @@ interface Props {
   /** Path within the site, e.g. "/pricing". Used for canonical + og:url. */
   path?: string;
   imageAlt?: string;
+  /** Locale dict. When provided, the page renders in that language. */
+  t?: Loc;
 }
 
-const siteUrl = 'https://zerouploadpdf.com';
-const { title, description, path = '/', imageAlt = 'ZeroUploadPDF — PDF to Excel in your browser' } =
-  Astro.props;
+const siteUrl = (import.meta.env.SITE ?? 'https://zerouploadpdf.com').replace(/\/$/, '');
+const { title, description, path = '/', imageAlt, t } = Astro.props;
 
-const canonical = new URL(path, siteUrl).href;
+const resolvedImageAlt =
+  imageAlt ?? t?.meta.imageAlt ?? 'ZeroUploadPDF — convert scanned PDF to Excel in your browser';
+
+const base = t?.base ?? '';
+const localePath = `${base}${path}`;
+const canonical = new URL(localePath, siteUrl).href;
 const ogTitle = `${title} · ZeroUploadPDF`;
-const ogImage = `${siteUrl}/og-card.svg`;
+const ogImage = `${siteUrl}/og-card.png`;
+
+const alternates = [
+  { code: 'x-default', href: new URL(path, siteUrl).href },
+  { code: 'en', href: new URL(path, siteUrl).href },
+  ...localeCodes.map((code) => ({
+    code,
+    href: new URL(`/${code}${path}`, siteUrl).href,
+  })),
+];
+
+const ogLocale =
+  {
+    en: 'en_US',
+    es: 'es_ES',
+    ja: 'ja_JP',
+    fr: 'fr_FR',
+    de: 'de_DE',
+    pt: 'pt_PT',
+    ko: 'ko_KR',
+    it: 'it_IT',
+  }[t?.code ?? 'en'] ?? 'en_US';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={t?.code ?? 'en'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -32,6 +61,10 @@ const ogImage = `${siteUrl}/og-card.svg`;
     <title>{ogTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {alternates.map((alt) => (
+      <link rel="alternate" hreflang={alt.code} href={alt.href} />
+    ))}
+    <meta property="og:locale" content={ogLocale} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="ZeroUploadPDF" />
@@ -39,13 +72,31 @@ const ogImage = `${siteUrl}/og-card.svg`;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:image:alt" content={resolvedImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={ogTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
     <meta name="theme-color" content="#faf7f1" />
+
+    <script is:inline>
+      (function () {
+        var t = null;
+        try {
+          t = localStorage.getItem('zup:theme');
+        } catch (e) {}
+        var dark =
+          t === 'dark' ||
+          (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        var root = document.documentElement;
+        root.classList.toggle('dark', dark);
+        root.dataset.theme = dark ? 'dark' : 'light';
+        root.style.colorScheme = dark ? 'dark' : 'light';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', dark ? '#171512' : '#faf7f1');
+      })();
+    </script>
 
     <script type="application/ld+json" is:inline set:html={JSON.stringify({
       '@context': 'https://schema.org',
@@ -54,14 +105,14 @@ const ogImage = `${siteUrl}/og-card.svg`;
       url: siteUrl,
       description:
         'Convert PDFs to Excel and CSV with zero uploads. Native PDFs are parsed in your browser; only scanned PDFs are sent to an OCR service.',
-      inLanguage: 'en',
+      inLanguage: t?.code ?? 'en',
     })} />
   </head>
   <body>
-    <Header />
+    <Header t={t} />
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    <Footer t={t} />
   </body>
 </html>

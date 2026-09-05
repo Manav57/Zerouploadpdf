@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import Converter from '../../components/Converter.astro';
+import { getLoc } from '../../i18n';
+
+export function getStaticPaths() {
+  return ['es', 'ja', 'fr', 'de', 'pt', 'ko', 'it'].map((code) => ({
+    params: { locale: code },
+    props: { t: getLoc(code) },
+  }));
+}
+
+const { t } = Astro.props;
+const notes = t.convert.notes;
+---
+
+<BaseLayout title={t.convert.metaTitle} description={t.convert.metaDesc} path="/convert" t={t}>
+  <PageIntro
+    eyebrow={t.convert.intro.eyebrow}
+    title={t.convert.intro.title}
+    lede={t.convert.intro.lede}
+  />
+
+  <section class="border-b border-border bg-surface">
+    <div class="mx-auto w-full max-w-3xl px-5 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <Converter t={t} />
+      <div class="mt-6 grid gap-3 text-center text-xs text-faint sm:grid-cols-3 sm:gap-6">
+        {notes.map((note) => (
+          <p>{note}</p>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

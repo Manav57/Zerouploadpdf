@@ -1,8 +1,24 @@
 ---
 import Converter from './Converter.astro';
 import Icon from './Icon.astro';
+import type { Loc } from '../i18n/types';
 
-const trustPoints = ['No account for one-off conversions', 'Nothing stored', 'Free OCR: 3 scans/day'];
+interface Props {
+  t?: Loc;
+}
+
+const { t } = Astro.props;
+const trustPoints = t?.hero.trust ?? ['No account for one-off conversions', 'Nothing stored', '10 free conversions daily'];
+const badge = t?.hero.badge ?? 'PDF → Excel / CSV · privacy-first';
+const h1a = t?.hero.h1a ?? 'Your file never';
+const h1b = t?.hero.h1b ?? 'leaves your browser.';
+const subLead = t?.hero.subLead ?? 'ZeroUploadPDF converts PDFs to Excel and CSV on your own device. Native PDFs are parsed right here in the tab — zero upload, zero waiting on a server.';
+const subNative = t?.hero.subNative ?? 'Scanned files use OCR that\'s';
+const subOcr = t?.hero.subOcr ?? 'free every day';
+const subTail = t?.hero.subTail ?? ' and deleted the moment it\'s done.';
+const cta = t?.hero.cta ?? 'Convert a PDF free';
+const how = t?.hero.how ?? 'How it works';
+const converterEyebrow = t?.hero.converterEyebrow ?? 'Try it right here';
 ---
 
 
@@ -16,21 +32,19 @@ const trustPoints = ['No account for one-off conversions', 'Nothing stored', 'Fr
         class="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface px-3 py-1 font-mono text-[0.7rem] font-medium uppercase tracking-[0.08em] text-primary"
       >
         <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
-        PDF → Excel / CSV · privacy-first
+        {badge}
       </p>
 
       <h1
         class="mt-5 font-display text-[clamp(2.25rem,5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-ink"
       >
-        Your file never
-        <span class="text-primary">leaves your browser.</span>
+        {h1a}{' '}
+        <span class="text-primary">{h1b}</span>
       </h1>
 
       <p class="mt-5 max-w-[45ch] text-lg leading-relaxed text-muted">
-        ZeroUploadPDF converts PDFs to Excel and CSV on your own device. Native PDFs
-        are parsed right here in the tab — zero upload, zero waiting on a server.
-        Scanned files use OCR that's <strong class="font-medium text-ink">free every day</strong> and
-        deleted the moment it's done.
+        {subLead}{' '}
+        {subNative} <strong class="font-medium text-ink">{subOcr}</strong>{subTail}
       </p>
 
       <div class="mt-7 flex flex-wrap items-center gap-3">
@@ -38,14 +52,14 @@ const trustPoints = ['No account for one-off conversions', 'Nothing stored', 'Fr
           href="#converter"
           class="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 font-mono text-sm font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-primary-strong"
         >
-          Convert a PDF free
+          {cta}
           <Icon name="arrow-down" class="h-4 w-4" />
         </a>
         <a
           href="#how-it-works"
           class="inline-flex h-12 items-center gap-2 rounded-md border border-border-strong bg-surface px-6 font-mono text-sm font-medium uppercase tracking-[0.06em] text-ink transition-colors hover:border-primary hover:text-primary"
         >
-          How it works
+          {how}
         </a>
       </div>
 
@@ -60,7 +74,7 @@ const trustPoints = ['No account for one-off conversions', 'Nothing stored', 'Fr
     </div>
 
     <div class="lg:col-span-5">
-      <Converter eyebrow="Try it right here" />
+      <Converter eyebrow={converterEyebrow} t={t} />
     </div>
   </div>
 </section>
