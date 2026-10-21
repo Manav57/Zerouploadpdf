@@ -15,7 +15,19 @@ pnpm-debug.log*
 
 # environment variables
 .env
-.env.production
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+
+# local QA / runtime artifacts
+*.log
+*.pid
+coverage/
+test-results/
+playwright-report/
+ocr.json
+ocr.out
 
 # macOS-specific files
 .DS_Store
